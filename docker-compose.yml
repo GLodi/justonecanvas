@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+
+  client:
+    build: ./client
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./client:/app
+
+  server:
+    build: ./server
+    ports:
+      - 8080:8080
+    volumes:
+      - ./server:/app
+
+  db:
+    image: postgres:12.2-alpine
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=password
+ 
+volumes:
+  db:
