@@ -6,6 +6,8 @@ services:
     build: ./client
     ports:
       - 3000:3000
+    depends_on:
+      - server
     environment:
       - NODE_ENV=development
     volumes:
@@ -13,19 +15,35 @@ services:
 
   server:
     build: ./server
+    env_file:
+      .env
     ports:
       - 8080:8080
     volumes:
       - ./server:/app
+    depends_on:
+      - postgres
+      - redis
+    links:
+      - postgres
+      - redis
 
-  db:
+  postgres:
     image: postgres:12.2-alpine
+    env_file:
+      .env
     volumes:
-      - db:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_PASSWORD=password
- 
+
+  redis:
+    image: redis:6.0.1-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+
 volumes:
-  db:
+  postgres:
+  redis:

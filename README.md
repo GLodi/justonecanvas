@@ -27,4 +27,5 @@ npm start
 
 ## production
 
+Create a .env.prod under root with your variables and
 `docker-compose -f docker-compose.prod.yml up` under root folder.

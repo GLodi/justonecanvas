@@ -5,7 +5,8 @@ services:
   client:
     build: ./client
     dockerfile: ./client/Dockerfile.prod
-    network_mode: host
+    env_file:
+      .env.prod
     depends_on:
       - server
     ports:
@@ -14,17 +15,33 @@ services:
   server:
     build: ./server
     dockerfile: ./server/Dockerfile.prod
+    env_file:
+      .env.prod
     ports:
       - 8080:8080
+    depends_on:
+      - postgres
+      - redis
+    links:
+      - postgres
+      - redis
 
-  db:
-    image: postgres:alpine
+  postgres:
+    image: postgres:12.2-alpine
+    env_file:
+      .env.prod
     volumes:
-      - db:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_PASSWORD=password
  
+  redis:
+    image: redis:6.0.1-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+
 volumes:
-  db:
+  postgres:
+  redis:
