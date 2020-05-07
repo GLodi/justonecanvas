@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/go-redis/redis/v7"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -22,4 +23,13 @@ func main() {
 	fmt.Println("prova")
 
 	defer db.Close()
+
+	client := redis.NewClient(&redis.Options{
+		Addr:     "redis:" + os.Getenv("REDIS_PORT"),
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	pong, err := client.Ping().Result()
+	fmt.Println(pong, err)
 }
