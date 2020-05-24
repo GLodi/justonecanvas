@@ -3,12 +3,12 @@ module github.com/GLodi/justonecanvas/goserver
 go 1.14
 
 require (
-	github.com/BurntSushi/toml v0.3.1 // indirect
-	github.com/gin-gonic/gin v1.6.2
-	github.com/go-redis/redis/v7 v7.2.0 // indirect
-	github.com/gorilla/mux v1.7.4
-	github.com/jinzhu/gorm v1.9.12 // indirect
-	go.uber.org/dig v1.9.0
-	gopkg.in/natefinch/lumberjack.v2 v2.0.0
+	github.com/go-redis/redis/v7 v7.2.0
+	github.com/golang/protobuf v1.3.3 // indirect
+	github.com/jinzhu/gorm v1.9.12
+	github.com/sirupsen/logrus v1.6.0 // indirect
+	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37 // indirect
+	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f // indirect
+	golang.org/x/sys v0.0.0-20200511232937-7e40ca221e25 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

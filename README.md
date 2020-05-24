@@ -1,5 +1,8 @@
 # justonecanvas
 
+This project follows [this](https://github.com/L04DB4L4NC3R/clean-architecture-sample) implementation
+of Clean Architecture
+
 ## development
 
 A complete dev environment is available under docker-compose. Just `docker-compose up` under root.
