@@ -1,3 +1,2 @@
 # ignore executables
-[^\.]*
 bin/
