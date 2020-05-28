@@ -15,10 +15,13 @@ services:
 
   server:
     build: ./server
+    tty: true
+    environment: 
+      - TERM=xterm-256color`
     env_file:
       .env
     ports:
-      - 8080:8080
+      - ${PORT}:${PORT}
     volumes:
       - ./server:/app
     depends_on:
@@ -32,6 +35,8 @@ services:
     image: postgres:12.2-alpine
     volumes:
       - postgres:/var/lib/postgresql/data
+    env_file:
+      - .env
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
 
