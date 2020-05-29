@@ -7,7 +7,6 @@ import (
 	"github.com/GLodi/justonecanvas/server/api/server"
 	"github.com/GLodi/justonecanvas/server/pkg/di"
 	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/sirupsen/logrus"
 )
 

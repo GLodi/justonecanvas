@@ -31,14 +31,15 @@ services:
       - postgres
       - redis
 
-  postgres:
-    image: postgres:12.2-alpine
-    volumes:
-      - postgres:/var/lib/postgresql/data
+  mongo:
+    image: mongo
+    restart: always
     env_file:
-      - .env
+      .env
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${MONGO_PORTS}:${MONGO_PORTS}
+    volumes:
+      - mongo:/data/db
 
   redis:
     image: redis:6.0.1-alpine
@@ -49,5 +50,5 @@ services:
       - redis:/data
 
 volumes:
-  postgres:
   redis:
+  mongo:

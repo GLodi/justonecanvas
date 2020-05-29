@@ -1,9 +1,12 @@
 package canvas
 
 import (
-	e "github.com/GLodi/justonecanvas/server/pkg/errors"
-	"github.com/jinzhu/gorm"
+	"context"
+
+	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repository interface {
@@ -12,53 +15,36 @@ type Repository interface {
 }
 
 type repo struct {
-	DB *gorm.DB
-	l  *logrus.Logger
+	mongo *mongo.Client
+	redis *redis.Client
+	l     *logrus.Logger
 }
 
-func NewRepo(db *gorm.DB, l *logrus.Logger) Repository {
+func NewRepo(mongo *mongo.Client, redis *redis.Client, l *logrus.Logger) Repository {
 	return &repo{
-		DB: db,
-		l:  l,
+		mongo: mongo,
+		redis: redis,
+		l:     l,
 	}
 }
 
 func (r *repo) Get() (c *Canvas, err error) {
 	// once you have both redis and pg, check redis first
 	r.l.Infoln("canvas_repo Get()")
-	c = &Canvas{}
-	result := r.DB.First(c)
 
-	switch result.Error {
-	case nil:
-		return c, nil
-	case gorm.ErrRecordNotFound:
-		return nil, e.ErrNotFound
-	default:
-		return nil, e.ErrDatabase
+	c = &Canvas{}
+
+	collection := r.mongo.Database("test").Collection("trainers")
+	err = collection.FindOne(context.TODO(), bson.D{{}}).Decode(&c)
+	if err != nil {
+		r.l.Errorln("canvas_repo Get() didn't find")
+		return nil, err
 	}
+
+	return c, nil
 }
 
 func (r *repo) Update(pos int, color uint8) error {
-	c := &Canvas{}
-	res1 := r.DB.First(c)
-
-	switch res1.Error {
-	case nil:
-		return nil
-	case gorm.ErrRecordNotFound:
-		return e.ErrNotFound
-	}
-
-	c.Cells[pos] = color
-	res2 := r.DB.Save(c)
-
-	switch res2.Error {
-	case nil:
-		return nil
-	case gorm.ErrRecordNotFound:
-		return e.ErrNotFound
-	default:
-		return e.ErrDatabase
-	}
+	r.l.Infoln("canvas_repo Update()")
+	return nil
 }

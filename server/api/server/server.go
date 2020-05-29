@@ -34,8 +34,8 @@ func (ds *dserver) MapRoutes() {
 func (ds *dserver) canvasRoutes(api *gin.RouterGroup) {
 	canvasRoutes := api.Group("/canvas")
 	{
-		var cs canvas.Service
-		ds.cont.Invoke(func(s canvas.Service) {
+		var cs canvas.UseCase
+		ds.cont.Invoke(func(s canvas.UseCase) {
 			cs = s
 		})
 

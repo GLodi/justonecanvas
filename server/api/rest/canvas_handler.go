@@ -10,10 +10,10 @@ import (
 
 type canvasHandler struct {
 	l   *logrus.Logger
-	svc canvas.Service
+	svc canvas.UseCase
 }
 
-func NewCanvasHandler(l *logrus.Logger, svc canvas.Service) *canvasHandler {
+func NewCanvasHandler(l *logrus.Logger, svc canvas.UseCase) *canvasHandler {
 	return &canvasHandler{l, svc}
 }
 

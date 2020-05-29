@@ -14,12 +14,12 @@ func BuildContainer() *dig.Container {
 	container.Provide(logrus.New)
 
 	// storage
-	container.Provide(storage.NewPostgres)
 	container.Provide(storage.NewRedis)
+	container.Provide(storage.NewMongo)
 
 	// canvas
 	container.Provide(canvas.NewRepo)
-	container.Provide(canvas.NewService)
+	container.Provide(canvas.NewUseCase)
 
 	return container
 }

@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"context"
 	"os"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,7 +17,7 @@ func NewRedis(l *logrus.Logger) *redis.Client {
 		Password: redis_password,
 		DB:       0,
 	})
-	pong, err := redis.Ping().Result()
+	pong, err := redis.Ping(context.TODO()).Result()
 	if err != nil {
 		panic("failed to connect to redis" + err.Error())
 	}
