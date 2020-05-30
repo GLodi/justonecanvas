@@ -23,7 +23,7 @@ func NewMongo(l *logrus.Logger) (*mongo.Client, error) {
 	if err != nil {
 		panic("failed to connect to mongo" + err.Error())
 	}
-	err = client.Ping(context.TODO(), nil)
+	err = client.Ping(ctx, nil)
 
 	if err != nil {
 		l.Errorln(err)

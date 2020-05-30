@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/GLodi/justonecanvas/server/api/server"
+	"github.com/GLodi/justonecanvas/server/pkg/api"
 	"github.com/GLodi/justonecanvas/server/pkg/di"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -19,12 +19,15 @@ func main() {
 func run() error {
 	g := gin.Default()
 	d := di.BuildContainer()
-	l := logrus.New()
+	var l *logrus.Logger
+	d.Invoke(func(log *logrus.Logger) {
+		l = log
+	})
 	l.SetFormatter(&logrus.TextFormatter{
 		ForceColors: true,
 	})
 
-	svr := server.NewServer(g, d, l)
+	svr := api.NewServer(g, d, l)
 	svr.MapRoutes()
 
 	return svr.Start()

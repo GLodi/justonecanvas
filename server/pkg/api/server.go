@@ -1,7 +1,7 @@
-package server
+package api
 
 import (
-	"github.com/GLodi/justonecanvas/server/api/rest"
+	"github.com/GLodi/justonecanvas/server/pkg/api/rest"
 	"github.com/GLodi/justonecanvas/server/pkg/canvas"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

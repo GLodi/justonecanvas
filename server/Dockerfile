@@ -8,4 +8,4 @@ RUN go mod download
 
 RUN go get github.com/githubnemo/CompileDaemon
 
-ENTRYPOINT CompileDaemon --build="go build -o bin/main api/main.go" --command=./bin/main
+ENTRYPOINT CompileDaemon --build="go build -o bin/main cmd/main.go" --command=./bin/main

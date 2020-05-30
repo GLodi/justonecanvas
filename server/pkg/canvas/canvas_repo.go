@@ -2,6 +2,7 @@ package canvas
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
@@ -34,8 +35,9 @@ func (r *repo) Get() (c *Canvas, err error) {
 
 	c = &Canvas{}
 
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	collection := r.mongo.Database("test").Collection("trainers")
-	err = collection.FindOne(context.TODO(), bson.D{{}}).Decode(&c)
+	err = collection.FindOne(ctx, bson.D{{}}).Decode(&c)
 	if err != nil {
 		r.l.Errorln("canvas_repo Get() didn't find")
 		return nil, err

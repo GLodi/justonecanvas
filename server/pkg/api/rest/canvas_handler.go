@@ -9,20 +9,20 @@ import (
 )
 
 type canvasHandler struct {
-	l   *logrus.Logger
-	svc canvas.UseCase
+	l  *logrus.Logger
+	uc canvas.UseCase
 }
 
-func NewCanvasHandler(l *logrus.Logger, svc canvas.UseCase) *canvasHandler {
-	return &canvasHandler{l, svc}
+func NewCanvasHandler(l *logrus.Logger, uc canvas.UseCase) *canvasHandler {
+	return &canvasHandler{l, uc}
 }
 
 func (ch *canvasHandler) Get(ctx *gin.Context) {
 	ch.l.Infoln("canvas_handler /GET")
-	c, err := ch.svc.Get()
+	c, err := ch.uc.Get()
 	if len(c.Cells) == 0 || err != nil {
 		ctx.Status(http.StatusNoContent)
-		ch.l.Errorln("/canvas GET NO CONTENT")
+		ch.l.Errorln("canvas_handler /GET NO CONTENT")
 		return
 	}
 	ch.l.Infoln("canvas_handler /GET OK", c)

@@ -25,10 +25,10 @@ services:
     volumes:
       - ./server:/app
     depends_on:
-      - postgres
+      - mongo
       - redis
     links:
-      - postgres
+      - mongo
       - redis
 
   mongo:

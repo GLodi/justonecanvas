@@ -22,6 +22,6 @@ func NewRedis(l *logrus.Logger) *redis.Client {
 		panic("failed to connect to redis" + err.Error())
 	}
 	defer redis.Close()
-	l.Println(pong, err.Error())
+	l.Println(pong, err)
 	return redis
 }
