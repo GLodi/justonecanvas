@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/GLodi/justonecanvas/server/pkg/api"
-	"github.com/GLodi/justonecanvas/server/pkg/di"
+	"github.com/GLodi/justonecanvas/server/internal/api"
+	"github.com/GLodi/justonecanvas/server/internal/di"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )

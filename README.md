@@ -5,7 +5,7 @@ of Clean Architecture
 
 ## development
 
-A complete dev environment is available under docker-compose. Just `docker-compose up` under root.
+A complete dev environment is available under docker-compose. Check Makefile or just `docker-compose up` under root.
 Both client and server are setup for hot-reloading.
 
 If you don't want to use docker, then:
