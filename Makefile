@@ -7,5 +7,8 @@ down:
 logs:
 	docker-compose logs -f
 
+prune:
+	docker volume prune
+
 clean:
 	docker system prune -f
