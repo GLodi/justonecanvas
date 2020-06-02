@@ -1,4 +1,7 @@
 up:
+	docker-compose up
+
+reup:
 	docker-compose up --build
 
 down:

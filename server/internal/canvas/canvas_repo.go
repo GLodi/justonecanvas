@@ -18,28 +18,30 @@ type Repository interface {
 type repo struct {
 	mongo *mongo.Client
 	redis *redis.Client
-	l     *logrus.Logger
+	log   *logrus.Logger
 }
 
 func NewRepo(mongo *mongo.Client, redis *redis.Client, l *logrus.Logger) Repository {
 	return &repo{
 		mongo: mongo,
 		redis: redis,
-		l:     l,
+		log:   l,
 	}
 }
 
 func (r *repo) Get() (c *Canvas, err error) {
 	// once you have both redis and pg, check redis first
-	r.l.Infoln("canvas_repo Get()")
+	r.log.Infoln("canvas_repo Get()")
 
 	c = &Canvas{}
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	collection := r.mongo.Database("test").Collection("trainers")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	collection := r.mongo.Database("canvas").Collection("canvas")
 	err = collection.FindOne(ctx, bson.D{{}}).Decode(&c)
 	if err != nil {
-		r.l.Errorln("canvas_repo Get() NO CONTENT")
+		r.log.Errorln("canvas_repo Get() FINDONE ERROR:", err)
 		return nil, err
 	}
 
@@ -47,6 +49,6 @@ func (r *repo) Get() (c *Canvas, err error) {
 }
 
 func (r *repo) Update(pos int, color uint8) error {
-	r.l.Infoln("canvas_repo Update()")
+	r.log.Infoln("canvas_repo Update()")
 	return nil
 }

@@ -9,8 +9,8 @@ import (
 )
 
 type canvasHandler struct {
-	l  *logrus.Logger
-	uc canvas.UseCase
+	log *logrus.Logger
+	uc  canvas.UseCase
 }
 
 func NewCanvasHandler(l *logrus.Logger, uc canvas.UseCase) *canvasHandler {
@@ -18,13 +18,13 @@ func NewCanvasHandler(l *logrus.Logger, uc canvas.UseCase) *canvasHandler {
 }
 
 func (ch *canvasHandler) Get(ctx *gin.Context) {
-	ch.l.Infoln("canvas_handler /GET")
+	ch.log.Infoln("canvas_handler /GET")
 	c, err := ch.uc.Get()
 	if len(c.Cells) == 0 || err != nil {
 		ctx.Status(http.StatusNoContent)
-		ch.l.Errorln("canvas_handler /GET NO CONTENT")
+		ch.log.Errorln("canvas_handler /GET ERROR:", err)
 		return
 	}
-	ch.l.Infoln("canvas_handler /GET OK", c)
+	ch.log.Infoln("canvas_handler /GET OK", c)
 	ctx.JSON(http.StatusOK, c)
 }
