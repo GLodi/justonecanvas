@@ -42,5 +42,6 @@ func (ds *dserver) canvasRoutes(api *gin.RouterGroup) {
 		ch := rest.NewCanvasHandler(ds.logger, cs)
 
 		canvasRoutes.GET("/", ch.Get)
+		canvasRoutes.PUT("/:index/color/:color", ch.Update)
 	}
 }

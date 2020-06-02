@@ -6,7 +6,7 @@ import (
 
 type UseCase interface {
 	Get() (*Canvas, error)
-	Update(pos int, color uint8) error
+	Update(pos int, color uint8) (*Canvas, error)
 }
 
 type usecase struct {
@@ -22,11 +22,9 @@ func NewUseCase(r Repository, l *logrus.Logger) UseCase {
 }
 
 func (u *usecase) Get() (*Canvas, error) {
-	u.log.Infoln("canvas_usecase Get()")
 	return u.repo.Get()
 }
 
-func (u *usecase) Update(pos int, color uint8) error {
-	u.log.Infoln("canvas_usecase Update()")
+func (u *usecase) Update(pos int, color uint8) (*Canvas, error) {
 	return u.repo.Update(pos, color)
 }

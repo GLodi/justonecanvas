@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/GLodi/justonecanvas/server/internal/canvas"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -45,9 +46,7 @@ func NewMongo(log *logrus.Logger) (client *mongo.Client, err error) {
 	err = collection.FindOne(ctx, bson.D{}).Err()
 	if err != nil {
 		log.Infoln("NewMongo CAN'T FIND CANVAS:", err)
-		collection.InsertOne(ctx, bson.D{
-			{"cells", [2500]uint16{}},
-		})
+		collection.InsertOne(ctx, &canvas.Canvas{ID: "1"})
 	}
 
 	return client, nil
