@@ -39,9 +39,9 @@ func (r *repo) Get() (c *Canvas, err error) {
 	defer cancel()
 
 	collection := r.mongo.Database("canvas").Collection("canvas")
-	err = collection.FindOne(ctx, bson.D{{}}).Decode(&c)
+	err = collection.FindOne(ctx, bson.D{}).Decode(&c)
 	if err != nil {
-		r.log.Errorln("canvas_repo Get() FINDONE ERROR:", err)
+		r.log.Errorln("canvas_repo Get() FINDONE:", err)
 		return nil, err
 	}
 

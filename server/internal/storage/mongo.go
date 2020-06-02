@@ -28,14 +28,10 @@ func NewMongo(log *logrus.Logger) (client *mongo.Client, err error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
-	defer client.Disconnect(ctx)
 	if err != nil {
 		log.Errorln("NewMongo: COULDN'T CONNECT", err)
 		return nil, err
 	}
-
-	databases, err := client.ListDatabaseNames(ctx, bson.M{})
-	log.Infoln(databases)
 
 	ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -43,6 +39,15 @@ func NewMongo(log *logrus.Logger) (client *mongo.Client, err error) {
 	if err != nil {
 		log.Errorln("NewMongo: NO PING", err)
 		return nil, err
+	}
+
+	collection := client.Database("canvas").Collection("canvas")
+	err = collection.FindOne(ctx, bson.D{}).Err()
+	if err != nil {
+		log.Infoln("NewMongo CAN'T FIND CANVAS:", err)
+		collection.InsertOne(ctx, bson.D{
+			{"cells", [2500]uint16{}},
+		})
 	}
 
 	return client, nil

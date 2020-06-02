@@ -21,7 +21,7 @@ services:
     env_file:
       .env
     ports:
-      - ${PORT}:${PORT}
+      - ${BACK_PORT}:${BACK_PORT}
     volumes:
       - ./server:/app
     depends_on:

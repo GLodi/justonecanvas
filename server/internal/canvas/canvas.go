@@ -1,5 +1,5 @@
 package canvas
 
 type Canvas struct {
-	Cells [2500]uint8 `json:"cells"`
+	Cells [2500]uint16 `json:"cells"`
 }

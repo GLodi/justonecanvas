@@ -22,9 +22,9 @@ func (ch *canvasHandler) Get(ctx *gin.Context) {
 	c, err := ch.uc.Get()
 	if len(c.Cells) == 0 || err != nil {
 		ctx.Status(http.StatusNoContent)
-		ch.log.Errorln("canvas_handler /GET ERROR:", err)
+		ch.log.Errorln("canvas_handler /GET:", err)
 		return
 	}
-	ch.log.Infoln("canvas_handler /GET OK", c)
+	ch.log.Infoln("canvas_handler /GET OK")
 	ctx.JSON(http.StatusOK, c)
 }
