@@ -49,7 +49,7 @@ func (r *repo) Update(pos int, color uint8) (c *Canvas, err error) {
 	defer cancel()
 
 	collection := r.mongo.Database("canvas").Collection("canvas")
-	res, err := collection.UpdateMany(ctx,
+	_, err = collection.UpdateMany(ctx,
 		bson.M{"id": "1"},
 		bson.M{"$set": bson.M{"cells." + strconv.Itoa(pos): color}},
 	)
@@ -57,7 +57,6 @@ func (r *repo) Update(pos int, color uint8) (c *Canvas, err error) {
 		r.log.Errorln("canvas_repo Update() UPDATEONE:", err)
 		return nil, err
 	}
-	r.log.Infoln("canvas_repo Update() UPDATEONE:", res)
 
 	err = collection.FindOne(ctx, bson.M{}).Decode(&c)
 	if err != nil {

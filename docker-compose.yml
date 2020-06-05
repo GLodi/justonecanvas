@@ -48,6 +48,8 @@ services:
       - ${REDIS_PORT}:${REDIS_PORT}
     volumes:
       - redis:/data
+    depends_on:
+      - mongo
 
 volumes:
   redis:

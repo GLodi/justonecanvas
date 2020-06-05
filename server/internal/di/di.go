@@ -14,8 +14,8 @@ func BuildContainer() *dig.Container {
 	container.Provide(logrus.New)
 
 	// storage
-	container.Provide(storage.NewRedis)
 	container.Provide(storage.NewMongo)
+	container.Provide(storage.NewRedis)
 
 	// canvas
 	container.Provide(canvas.NewRepo)

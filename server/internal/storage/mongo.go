@@ -46,7 +46,17 @@ func NewMongo(log *logrus.Logger) (client *mongo.Client, err error) {
 	err = collection.FindOne(ctx, bson.D{}).Err()
 	if err != nil {
 		log.Infoln("NewMongo CAN'T FIND CANVAS:", err)
-		collection.InsertOne(ctx, &canvas.Canvas{ID: "1"})
+
+		c := &canvas.Canvas{ID: "1"}
+		cell := canvas.Cell{
+			Timestamp: time.Now(),
+			Color:     0,
+		}
+		for i := 0; i < 2500; i++ {
+			c.Cells[i] = cell
+		}
+
+		collection.InsertOne(ctx, c)
 	}
 
 	return client, nil

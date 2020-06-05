@@ -14,4 +14,5 @@ prune:
 	docker volume prune
 
 clean:
-	docker system prune -f
+	docker-compose down
+	docker volume prune
