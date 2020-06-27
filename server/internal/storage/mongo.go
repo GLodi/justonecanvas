@@ -45,7 +45,7 @@ func NewMongo(log *logrus.Logger) (client *mongo.Client, err error) {
 	collection := client.Database("canvas").Collection("canvas")
 	err = collection.FindOne(ctx, bson.D{}).Err()
 	if err != nil {
-		log.Infoln("NewMongo CAN'T FIND CANVAS:", err)
+		log.Errorln("NewMongo CAN'T FIND CANVAS:", err)
 
 		c := &canvas.Canvas{ID: "1"}
 		cell := canvas.Cell{

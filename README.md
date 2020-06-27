@@ -32,3 +32,11 @@ npm start
 
 Create a .env.prod under root with your variables and
 `docker-compose -f docker-compose.prod.yml up` under root folder.
+
+## profiling
+
+Thanks to pprof package, you can:
+
+`wget http://localhost:8080/debug/pprof/trace\?seconds\=5` to profile 5 seconds of execution.
+
+`go tool trace 'trace?seconds=5'` to analyze.

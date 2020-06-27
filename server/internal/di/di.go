@@ -1,6 +1,7 @@
 package di
 
 import (
+	"github.com/GLodi/justonecanvas/server/internal/api/ws"
 	"github.com/GLodi/justonecanvas/server/internal/canvas"
 	"github.com/GLodi/justonecanvas/server/internal/storage"
 	"github.com/sirupsen/logrus"
@@ -12,6 +13,11 @@ var container = dig.New()
 func BuildContainer() *dig.Container {
 	// logger
 	container.Provide(logrus.New)
+	container.Provide(func() *ws.Hub {
+		hub := ws.NewHub()
+		go hub.run()
+		return hub
+	})
 
 	// storage
 	container.Provide(storage.NewMongo)
