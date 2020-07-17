@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/GLodi/justonecanvas/server/internal/api/rest"
+	"github.com/GLodi/justonecanvas/server/internal/api/ws"
 	"github.com/GLodi/justonecanvas/server/internal/canvas"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -38,8 +39,12 @@ func (ds *dserver) canvasRoutes(api *gin.RouterGroup) {
 		ds.cont.Invoke(func(s canvas.UseCase) {
 			cs = s
 		})
+		var h *ws.Hub
+		ds.cont.Invoke(func(hub *ws.Hub) {
+			h = hub
+		})
 
-		ch := rest.NewCanvasHandler(ds.logger, cs)
+		ch := rest.NewCanvasHandler(ds.logger, h, cs)
 
 		canvasRoutes.GET("/", ch.Get)
 		canvasRoutes.GET("/ws", ch.GetWs)

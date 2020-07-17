@@ -21,6 +21,10 @@ go run ./main.go
 
 ### client
 
+Because of a problem regarding Docker and create-react-app, the project was created with:
+
+`npx create-react-app client2 --use-npm --typescript --scripts-version=react-scripts@3.4.0`
+
 Runs on 3000
 
 ```

@@ -1,24 +1,23 @@
 package rest
 
 import (
-	"bytes"
-	"encoding/gob"
 	"net/http"
 	"strconv"
 
+	"github.com/GLodi/justonecanvas/server/internal/api/ws"
 	"github.com/GLodi/justonecanvas/server/internal/canvas"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 )
 
 type canvasHandler struct {
 	log *logrus.Logger
+	hub *ws.Hub
 	uc  canvas.UseCase
 }
 
-func NewCanvasHandler(l *logrus.Logger, uc canvas.UseCase) *canvasHandler {
-	return &canvasHandler{l, uc}
+func NewCanvasHandler(l *logrus.Logger, h *ws.Hub, uc canvas.UseCase) *canvasHandler {
+	return &canvasHandler{log: l, hub: h, uc: uc}
 }
 
 func (ch *canvasHandler) Get(ctx *gin.Context) {
@@ -29,26 +28,25 @@ func (ch *canvasHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	out := bytes.NewBuffer(nil)
-	if err := gob.NewEncoder(out).Encode(&c); err != nil {
-		ch.log.Errorln("canvas_handler /GET: ", err)
-		ctx.AbortWithStatusJSON(
-			http.StatusInternalServerError,
-			gin.H{"err": err.Error()},
-		)
-		return
-	}
+	// out := bytes.NewBuffer(nil)
+	// if err := gob.NewEncoder(out).Encode(&c); err != nil {
+	// 	ch.log.Errorln("canvas_handler /GET: ", err)
+	// 	ctx.AbortWithStatusJSON(
+	// 		http.StatusInternalServerError,
+	// 		gin.H{"err": err.Error()},
+	// 	)
+	// 	return
+	// }
+	// ctx.Data(http.StatusOK, "application/x-gob", out.Bytes())
 
+	ctx.JSON(http.StatusOK, c)
 	ch.log.Infoln("canvas_handler /GET OK")
-	ctx.Data(http.StatusOK, "application/x-gob", out.Bytes())
-
-	// ctx.JSON(http.StatusOK, c)
 }
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
+// var upgrader = websocket.Upgrader{
+// 	ReadBufferSize:  1024,
+// 	WriteBufferSize: 1024,
+// }
 
 // IN ORDER TO TEST FROM BROWSER:
 // ws = new WebSocket("ws://localhost:8080/api/v1/canvas/ws");
@@ -61,24 +59,26 @@ var upgrader = websocket.Upgrader{
 // }
 
 func (ch *canvasHandler) GetWs(ctx *gin.Context) {
-	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+	ws.ServeWs(ch.hub, ctx.Writer, ctx.Request)
 
-	conn, _ := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
+	// upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
-	for {
-		msgType, msg, err := conn.ReadMessage()
-		if err != nil {
-			return
-		}
+	// conn, _ := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 
-		ch.log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
+	// for {
+	// 	msgType, msg, err := conn.ReadMessage()
+	// 	if err != nil {
+	// 		return
+	// 	}
 
-		msg1 := []byte("prova")
+	// 	ch.log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
 
-		if err = conn.WriteMessage(msgType, msg1); err != nil {
-			return
-		}
-	}
+	// 	msg1 := []byte("prova")
+
+	// 	if err = conn.WriteMessage(msgType, msg1); err != nil {
+	// 		return
+	// 	}
+	// }
 }
 
 func (ch *canvasHandler) Update(ctx *gin.Context) {

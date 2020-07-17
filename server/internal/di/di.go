@@ -13,11 +13,7 @@ var container = dig.New()
 func BuildContainer() *dig.Container {
 	// logger
 	container.Provide(logrus.New)
-	container.Provide(func() *ws.Hub {
-		hub := ws.NewHub()
-		go hub.run()
-		return hub
-	})
+	container.Provide(ws.NewHub)
 
 	// storage
 	container.Provide(storage.NewMongo)

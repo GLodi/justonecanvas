@@ -19,6 +19,7 @@ func main() {
 func run() error {
 	g := gin.Default()
 	d := di.BuildContainer()
+
 	var l *logrus.Logger
 	d.Invoke(func(log *logrus.Logger) {
 		l = log
