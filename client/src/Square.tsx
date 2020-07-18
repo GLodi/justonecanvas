@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { jsx } from 'theme-ui'
+import { Rect } from 'react-konva'
 
 interface IProps {
   countBy?: number
@@ -25,12 +25,7 @@ class Square extends React.Component<IProps, IState> {
   }
 
   public render() {
-    return (
-      <div>
-        <p>My favorite number is {this.state.count}</p>
-        <button onClick={this.increase}>Increase</button>
-      </div>
-    )
+    return <Rect x={20} y={20} width={20} height={20} fill={'blue'} />
   }
 }
 

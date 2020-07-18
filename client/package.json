@@ -14,8 +14,8 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.0",
     "typescript": "^3.7.5",
-    "theme-ui": "^0.3.1",
-    "@types/theme-ui": "^0.3.1"
+    "konva": "^7.0.3",
+    "react-konva": "^16.13.0-3"
   },
   "scripts": {
     "start": "react-scripts start",
