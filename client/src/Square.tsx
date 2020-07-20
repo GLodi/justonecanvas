@@ -1,31 +1,55 @@
 import * as React from 'react'
 import { Rect } from 'react-konva'
+import Konva from 'konva'
 
 interface IProps {
-  countBy?: number
+  color?: string
+  offsetX?: number
+  offsetY?: number
+  size?: number
 }
 
 interface IState {
-  count: number
+  color: string
+  offsetX: number
+  offsetY: number
+  size: number
 }
 
 class Square extends React.Component<IProps, IState> {
   public static defaultProps: Partial<IProps> = {
-    countBy: 1
+    color: 'blue',
+    offsetX: 0,
+    offsetY: 0,
+    size: 40
   }
 
   public state: IState = {
-    count: 0
+    color: this.props.color!,
+    offsetX: this.props.offsetX!,
+    offsetY: this.props.offsetY!,
+    size: this.props.size!
   }
 
-  public increase = () => {
-    const countBy: number = this.props.countBy!
-    const count = this.state.count + countBy
-    this.setState({ count })
+  public changeColor = () => {
+    const color = Konva.Util.getRandomColor()
+    this.setState({ color })
+    /* const countBy: number = this.props.countBy!
+     * const count = this.state.count + countBy
+     * this.setState({ count }) */
   }
 
   public render() {
-    return <Rect x={20} y={20} width={20} height={20} fill={'blue'} />
+    return (
+      <Rect
+        x={this.state.offsetX}
+        y={this.state.offsetY}
+        width={this.state.size}
+        height={this.state.size}
+        fill={this.state.color}
+        onClick={this.changeColor}
+      />
+    )
   }
 }
 
