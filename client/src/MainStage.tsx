@@ -5,8 +5,10 @@ import Konva from 'konva'
 
 const squareAmount = 1600
 const squarePerRow = Math.sqrt(squareAmount)
-const squareSize = 20
-const layersAmount = 2
+const squareSize = 1
+const layersAmount = 3
+const startScale = 20
+const scaleBy = 1.05
 
 interface IProps {
   stageX?: number
@@ -28,9 +30,11 @@ class MainStage extends React.Component<IProps, IState> {
   }
 
   public state: IState = {
-    stageX: window.innerWidth / 2 - (squarePerRow * squareSize) / 2,
-    stageY: window.innerHeight / 2 - (squarePerRow * squareSize) / 2,
-    stageScale: 1
+    stageX:
+      window.innerWidth / 2 - ((squarePerRow * squareSize) / 2) * startScale,
+    stageY:
+      window.innerHeight / 2 - ((squarePerRow * squareSize) / 2) * startScale,
+    stageScale: startScale
   }
 
   public render() {
@@ -62,7 +66,6 @@ class MainStage extends React.Component<IProps, IState> {
       <Stage
         onWheel={e => {
           e.evt.preventDefault()
-          const scaleBy = 1.1
           const stage = e.target.getStage()
           if (stage != null) {
             const oldScale = stage?.scaleX()
