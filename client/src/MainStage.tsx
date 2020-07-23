@@ -68,6 +68,13 @@ class MainStage extends React.Component<IProps, IState> {
       clearTimeout(connectInterval) // clear Interval on on open of websocket connection
     }
 
+    ws.onmessage = evt => {
+      // listen to data sent from the websocket server
+      //const message = JSON.parse(evt.data)
+      //this.setState({ dataFromServer: message })
+      console.log(evt.data)
+    }
+
     // websocket onclose event listener
     ws.onclose = e => {
       console.log(
@@ -94,11 +101,13 @@ class MainStage extends React.Component<IProps, IState> {
 
   public render() {
     var rows = []
+
     for (var i = 0; i < squareAmount; i++) {
       rows.push(
         <Square
           key={i}
           size={squareSize}
+          ws={this.state.ws}
           color={Konva.Util.getRandomColor()}
           offsetX={(i % squarePerRow) * squareSize}
           offsetY={Math.floor(i / squarePerRow) * squareSize}

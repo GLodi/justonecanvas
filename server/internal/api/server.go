@@ -43,6 +43,7 @@ func (ds *dserver) canvasRoutes(api *gin.RouterGroup) {
 		ds.cont.Invoke(func(hub *ws.Hub) {
 			h = hub
 		})
+		go h.Run()
 
 		ch := rest.NewCanvasHandler(ds.logger, h, cs)
 
