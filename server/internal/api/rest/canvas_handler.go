@@ -59,7 +59,7 @@ func (ch *canvasHandler) Get(ctx *gin.Context) {
 // }
 
 func (ch *canvasHandler) GetWs(ctx *gin.Context) {
-	ws.ServeWs(ch.hub, ctx.Writer, ctx.Request)
+	ws.ServeWs(ch.log, ch.hub, ctx.Writer, ctx.Request)
 
 	// upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 

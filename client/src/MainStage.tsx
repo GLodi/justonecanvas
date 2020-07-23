@@ -54,7 +54,7 @@ class MainStage extends React.Component<IProps, IState> {
   }
 
   public connect() {
-    const ws = new WebSocket('ws://localhost:3000/ws')
+    const ws = new WebSocket('ws://localhost:8080/api/v1/canvas/ws')
     const that = this // cache the this
     let connectInterval: NodeJS.Timeout
 
