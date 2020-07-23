@@ -15,7 +15,9 @@
     "react-scripts": "3.4.0",
     "typescript": "^3.7.5",
     "konva": "^7.0.3",
-    "react-konva": "^16.13.0-3"
+    "react-konva": "^16.13.0-3",
+    "websocket": "^1.0.31",
+    "@types/websocket": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

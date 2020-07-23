@@ -1,7 +1,10 @@
 # justonecanvas
 
-This project follows [this](https://github.com/L04DB4L4NC3R/clean-architecture-sample) implementation
+This project follows a combination of [this](https://github.com/L04DB4L4NC3R/clean-architecture-sample) and [this](https://github.com/AkbaraliShaikh/denti) implementations
 of Clean Architecture
+
+Websockets implementation follows [this](https://github.com/gorilla/websocket/tree/master/examples/chat) and
+on the [frontend](https://dev.to/finallynero/using-websockets-in-react-4fkp)
 
 ## development
 
