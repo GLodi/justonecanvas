@@ -17,15 +17,15 @@ interface IState {
   stageY: number
   stageScale: number
   ws: WebSocket | null
+  grid: number[][]
 }
 
 class MainStage extends React.Component<IProps, IState> {
-  grid: number[][] = new Array(Constants.SQUARE_PER_ROW)
-    .fill(0)
-    .map(() => new Array(Constants.SQUARE_PER_ROW).fill(0))
-
   timeout = 250
 
+  public shouldComponentUpdate() {
+    return true
+  }
   public static defaultProps: Partial<IProps> = {
     stageX: 0,
     stageY: 0,
@@ -42,7 +42,20 @@ class MainStage extends React.Component<IProps, IState> {
       ((Constants.SQUARE_PER_ROW * Constants.SQUARE_SIZE) / 2) *
         Constants.START_SCALE,
     stageScale: Constants.START_SCALE,
-    ws: null
+    ws: null,
+    grid: this.makegrid()
+  }
+
+  private makegrid(): number[][] {
+    let grid: number[][] = new Array(Constants.SQUARE_PER_ROW)
+      .fill(0)
+      .map(() => new Array(Constants.SQUARE_PER_ROW).fill(0))
+    for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
+      const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+      const y = Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+      grid[y][x] = Math.floor(Math.random() * (Constants.COLOR_AMOUNT + 1))
+    }
+    return grid
   }
 
   public componentDidMount() {
@@ -76,10 +89,15 @@ class MainStage extends React.Component<IProps, IState> {
       //this.setState({ dataFromServer: message })
       var buf = new Uint8Array(evt.data).buffer
       var data = new DataView(buf)
-      const index: number = data.getUint8(0)
+      const color: number = data.getUint8(0)
       const y: number = data.getUint8(1)
       const x: number = data.getUint8(2)
-      console.log('received: ', index, y, x)
+      console.log('received: ', color, y, x)
+      console.log('old: ', this.state.grid[0])
+      let n: number[][] = this.state.grid
+      n[y][x] = color
+      this.setState({ grid: n })
+      console.log('newstate: ', this.state.grid[0])
     }
 
     // websocket onclose event listener
@@ -111,14 +129,13 @@ class MainStage extends React.Component<IProps, IState> {
     for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
       const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
       const y = Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
-      this.grid[y][x] = Math.floor(Math.random() * (Constants.COLOR_AMOUNT + 1))
       rows.push(
         <Square
           key={i}
           index={i}
           size={Constants.SQUARE_SIZE}
           ws={this.state.ws}
-          color={this.grid[y][x]}
+          color={this.state.grid[y][x]}
           offsetX={x}
           offsetY={y}
         />

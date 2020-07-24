@@ -58,11 +58,8 @@ class Square extends React.Component<IProps, IState> {
     index: this.props.index!
   }
 
-  public componentDidUpdate(prevProps: Readonly<IProps>) {
-    if (prevProps.color !== this.props.color && this.props.color != null) {
-      const color: number = this.props.color
-      this.setState({ color })
-    }
+  public componentWillReceiveProps(nextProps: IProps) {
+    this.setState({ color: nextProps.color! })
   }
 
   public send(colorIndex: number) {

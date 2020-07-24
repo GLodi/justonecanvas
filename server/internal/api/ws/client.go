@@ -99,7 +99,6 @@ func (c *Client) writePump() {
 			if err != nil {
 				return
 			}
-			c.hub.log.Infoln("sending", message)
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message.
