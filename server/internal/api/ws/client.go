@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"bytes"
 	"log"
 	"net/http"
 	"time"
@@ -69,7 +68,8 @@ func (c *Client) readPump() {
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		// deletes last byte sometimes
+		//message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		c.hub.broadcast <- message
 	}
 }
@@ -95,10 +95,11 @@ func (c *Client) writePump() {
 				return
 			}
 
-			w, err := c.conn.NextWriter(websocket.TextMessage)
+			w, err := c.conn.NextWriter(websocket.BinaryMessage)
 			if err != nil {
 				return
 			}
+			c.hub.log.Infoln("sending", message)
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message.
@@ -130,8 +131,6 @@ func ServeWs(l *logrus.Logger, hub *Hub, w http.ResponseWriter, r *http.Request)
 
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
 	client.hub.register <- client
-
-	l.Infoln("NEW WS CLIENT")
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.

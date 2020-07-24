@@ -1,61 +1,93 @@
 import * as React from 'react'
 import { Rect } from 'react-konva'
-import Konva from 'konva'
 // eslint-disable-next-line
 import { w3cwebsocket } from 'websocket'
+import { Constants } from './constants'
+
+const map = [
+  'white',
+  'blue',
+  'lime',
+  'red',
+  'orange',
+  'yellow',
+  'purple',
+  'fuchsia',
+  'black',
+  'teal',
+  'cyan',
+  'gray',
+  'green',
+  'pink',
+  'navy',
+  'chocolate'
+]
 
 interface IProps {
-  color?: string
+  color?: number
   offsetX?: number
   offsetY?: number
   size?: number
   ws?: WebSocket | null
+  index?: number
 }
 
 interface IState {
-  color: string
+  color: number
   offsetX: number
   offsetY: number
   size: number
+  index: number
 }
 
 class Square extends React.Component<IProps, IState> {
   public static defaultProps: Partial<IProps> = {
-    color: 'blue',
+    color: 0,
     offsetX: 0,
     offsetY: 0,
     size: 40,
-    ws: null
+    ws: null,
+    index: 0
   }
 
   public state: IState = {
     color: this.props.color!,
     offsetX: this.props.offsetX!,
     offsetY: this.props.offsetY!,
-    size: this.props.size!
+    size: this.props.size!,
+    index: this.props.index!
   }
 
-  public send(color: string) {
+  public componentDidUpdate(prevProps: Readonly<IProps>) {
+    if (prevProps.color !== this.props.color && this.props.color != null) {
+      const color: number = this.props.color
+      this.setState({ color })
+    }
+  }
+
+  public send(colorIndex: number) {
     try {
-      const ws = this.props.ws // websocket instance passed as props to the child component.
+      const ws = this.props.ws
+      const data = Uint8Array.from([
+        colorIndex,
+        Math.floor(this.state.index / Constants.SQUARE_PER_ROW),
+        this.state.index % Constants.SQUARE_PER_ROW
+      ])
+      console.log('sending: ', data)
       if (ws != null) {
-        console.log('sto inviando') // catch error
-        ws.send(color) //send data to the server
+        ws.send(data)
       }
     } catch (error) {
-      console.log(error) // catch error
+      console.log(error)
     }
   }
 
   public changeColor = () => {
-    const color: string = Konva.Util.getRandomColor()
+    const color: number = Math.floor(
+      Math.random() * (Constants.COLOR_AMOUNT + 1)
+    )
     this.send(color)
     this.setState({ color })
-    // send new color to ws
-
-    /* const countBy: number = this.props.countBy!
-     * const count = this.state.count + countBy
-     * this.setState({ count }) */
   }
 
   public render() {
@@ -65,7 +97,7 @@ class Square extends React.Component<IProps, IState> {
         y={this.state.offsetY}
         width={this.state.size}
         height={this.state.size}
-        fill={this.state.color}
+        fill={map[this.state.color]}
         onClick={this.changeColor}
       />
     )

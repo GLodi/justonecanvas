@@ -1,6 +1,8 @@
 package rest
 
 import (
+	"bytes"
+	"encoding/gob"
 	"net/http"
 	"strconv"
 
@@ -28,57 +30,29 @@ func (ch *canvasHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	// out := bytes.NewBuffer(nil)
-	// if err := gob.NewEncoder(out).Encode(&c); err != nil {
-	// 	ch.log.Errorln("canvas_handler /GET: ", err)
-	// 	ctx.AbortWithStatusJSON(
-	// 		http.StatusInternalServerError,
-	// 		gin.H{"err": err.Error()},
-	// 	)
-	// 	return
-	// }
-	// ctx.Data(http.StatusOK, "application/x-gob", out.Bytes())
+	// binary response
+	out := bytes.NewBuffer(nil)
+	if err := gob.NewEncoder(out).Encode(&c); err != nil {
+		ch.log.Errorln("canvas_handler /GET: ", err)
+		ctx.AbortWithStatusJSON(
+			http.StatusInternalServerError,
+			gin.H{"err": err.Error()},
+		)
+		return
+	}
 
-	ctx.JSON(http.StatusOK, c)
+	// JSON response
+	// ctx.JSON(http.StatusOK, c)
+
+	ch.log.Println(len(out.Bytes()))
+
+	ctx.Data(http.StatusOK, "application/x-gob", out.Bytes())
+
 	ch.log.Infoln("canvas_handler /GET OK")
 }
 
-// var upgrader = websocket.Upgrader{
-// 	ReadBufferSize:  1024,
-// 	WriteBufferSize: 1024,
-// }
-
-// IN ORDER TO TEST FROM BROWSER:
-// ws = new WebSocket("ws://localhost:8080/api/v1/canvas/ws");
-// ws.onmessage = function (e) {
-//     console.log(e.data);
-// };
-
-// ws.onopen = function() {
-//     ws.send("SomeMessage");
-// }
-
 func (ch *canvasHandler) GetWs(ctx *gin.Context) {
 	ws.ServeWs(ch.log, ch.hub, ctx.Writer, ctx.Request)
-
-	// upgrader.CheckOrigin = func(r *http.Request) bool { return true }
-
-	// conn, _ := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
-
-	// for {
-	// 	msgType, msg, err := conn.ReadMessage()
-	// 	if err != nil {
-	// 		return
-	// 	}
-
-	// 	ch.log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
-
-	// 	msg1 := []byte("prova")
-
-	// 	if err = conn.WriteMessage(msgType, msg1); err != nil {
-	// 		return
-	// 	}
-	// }
 }
 
 func (ch *canvasHandler) Update(ctx *gin.Context) {

@@ -1,27 +1,28 @@
 package ws
 
-import "log"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 type Hub struct {
-	// Registered clients.
 	clients map[*Client]bool
 
-	// Inbound messages from the clients.
 	broadcast chan []byte
 
-	// Register requests from the clients.
 	register chan *Client
 
-	// Unregister requests from clients.
 	unregister chan *Client
+
+	log *logrus.Logger
 }
 
-func NewHub() *Hub {
+func NewHub(l *logrus.Logger) *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[*Client]bool),
+		log:        l,
 	}
 }
 
@@ -29,20 +30,19 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			log.Println("registering")
 			h.clients[client] = true
+			h.log.Infoln("hub + connected:", len(h.clients))
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
-				log.Println("unregistering")
 				delete(h.clients, client)
 				close(client.send)
+				h.log.Infoln("hub - connected:", len(h.clients))
 			}
 		case message := <-h.broadcast:
-			log.Println("received: ", message)
+			h.log.Infoln("hub received:", message, " size: ", len(message), " players:", len(h.clients))
 			for client := range h.clients {
 				select {
 				case client.send <- message:
-					log.Println("sent: ", message)
 				default:
 					close(client.send)
 					delete(h.clients, client)

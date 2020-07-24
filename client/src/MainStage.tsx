@@ -1,16 +1,9 @@
 import * as React from 'react'
 import { Stage, Layer } from 'react-konva'
 import Square from './Square'
-import Konva from 'konva'
 // eslint-disable-next-line
 import { w3cwebsocket } from 'websocket'
-
-const squareAmount = 1600
-const squarePerRow = Math.sqrt(squareAmount)
-const squareSize = 1
-const layersAmount = 2
-const startScale = 20
-const scaleBy = 1.05
+import { Constants } from './constants'
 
 interface IProps {
   stageX?: number
@@ -27,6 +20,10 @@ interface IState {
 }
 
 class MainStage extends React.Component<IProps, IState> {
+  grid: number[][] = new Array(Constants.SQUARE_PER_ROW)
+    .fill(0)
+    .map(() => new Array(Constants.SQUARE_PER_ROW).fill(0))
+
   timeout = 250
 
   public static defaultProps: Partial<IProps> = {
@@ -37,10 +34,14 @@ class MainStage extends React.Component<IProps, IState> {
 
   public state: IState = {
     stageX:
-      window.innerWidth / 2 - ((squarePerRow * squareSize) / 2) * startScale,
+      window.innerWidth / 2 -
+      ((Constants.SQUARE_PER_ROW * Constants.SQUARE_SIZE) / 2) *
+        Constants.START_SCALE,
     stageY:
-      window.innerHeight / 2 - ((squarePerRow * squareSize) / 2) * startScale,
-    stageScale: startScale,
+      window.innerHeight / 2 -
+      ((Constants.SQUARE_PER_ROW * Constants.SQUARE_SIZE) / 2) *
+        Constants.START_SCALE,
+    stageScale: Constants.START_SCALE,
     ws: null
   }
 
@@ -55,6 +56,7 @@ class MainStage extends React.Component<IProps, IState> {
 
   public connect() {
     const ws = new WebSocket('ws://localhost:8080/api/v1/canvas/ws')
+    ws.binaryType = 'arraybuffer'
     const that = this // cache the this
     let connectInterval: NodeJS.Timeout
 
@@ -72,7 +74,12 @@ class MainStage extends React.Component<IProps, IState> {
       // listen to data sent from the websocket server
       //const message = JSON.parse(evt.data)
       //this.setState({ dataFromServer: message })
-      console.log(evt.data)
+      var buf = new Uint8Array(evt.data).buffer
+      var data = new DataView(buf)
+      const index: number = data.getUint8(0)
+      const y: number = data.getUint8(1)
+      const x: number = data.getUint8(2)
+      console.log('received: ', index, y, x)
     }
 
     // websocket onclose event listener
@@ -101,25 +108,32 @@ class MainStage extends React.Component<IProps, IState> {
 
   public render() {
     var rows = []
-
-    for (var i = 0; i < squareAmount; i++) {
+    for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
+      const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+      const y = Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+      this.grid[y][x] = Math.floor(Math.random() * (Constants.COLOR_AMOUNT + 1))
       rows.push(
         <Square
           key={i}
-          size={squareSize}
+          index={i}
+          size={Constants.SQUARE_SIZE}
           ws={this.state.ws}
-          color={Konva.Util.getRandomColor()}
-          offsetX={(i % squarePerRow) * squareSize}
-          offsetY={Math.floor(i / squarePerRow) * squareSize}
+          color={this.grid[y][x]}
+          offsetX={x}
+          offsetY={y}
         />
       )
     }
 
     var layers = []
     i = 0
-    for (var j = 0; j < layersAmount; j++) {
+    for (var j = 0; j < Constants.LAYERS_AMOUNT; j++) {
       var layerRows = []
-      for (var k = 0; k < squareAmount / layersAmount; k++) {
+      for (
+        var k = 0;
+        k < Constants.SQUARE_AMOUNT / Constants.LAYERS_AMOUNT;
+        k++
+      ) {
         layerRows.push(rows[i])
         i++
       }
@@ -140,7 +154,9 @@ class MainStage extends React.Component<IProps, IState> {
             }
 
             const newScale =
-              e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy
+              e.evt.deltaY > 0
+                ? oldScale * Constants.SCALE_BY
+                : oldScale / Constants.SCALE_BY
 
             this.setState({
               stageScale: newScale,
