@@ -84,7 +84,7 @@ class Square extends React.Component<IProps, IState> {
       Math.random() * (Constants.COLOR_AMOUNT + 1)
     )
     this.send(color)
-    this.setState({ color })
+    /* this.setState({ color }) */
   }
 
   public render() {

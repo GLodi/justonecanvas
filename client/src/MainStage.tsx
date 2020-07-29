@@ -22,10 +22,10 @@ interface IState {
 
 class MainStage extends React.Component<IProps, IState> {
   timeout = 250
+  references = Array(Constants.SQUARE_AMOUNT)
+    .fill(0)
+    .map(() => React.createRef<Square>())
 
-  public shouldComponentUpdate() {
-    return true
-  }
   public static defaultProps: Partial<IProps> = {
     stageX: 0,
     stageY: 0,
@@ -46,6 +46,13 @@ class MainStage extends React.Component<IProps, IState> {
     grid: this.makegrid()
   }
 
+  private getOrCreateRef(id: number): React.RefObject<Square> {
+    if (!this.references.hasOwnProperty(id)) {
+      this.references[id] = React.createRef<Square>()
+    }
+    return this.references[id]
+  }
+
   private makegrid(): number[][] {
     let grid: number[][] = new Array(Constants.SQUARE_PER_ROW)
       .fill(0)
@@ -53,21 +60,13 @@ class MainStage extends React.Component<IProps, IState> {
     for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
       const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
       const y = Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
-      grid[y][x] = Math.floor(Math.random() * (Constants.COLOR_AMOUNT + 1))
+      /* grid[y][x] = Math.floor(Math.random() * (Constants.COLOR_AMOUNT + 1)) */
+      grid[y][x] = 0
     }
     return grid
   }
 
-  public componentDidMount() {
-    this.connect()
-  }
-
-  public check() {
-    const ws = this.state.ws
-    if (!ws || ws.readyState === WebSocket.CLOSED) this.connect() //check if websocket instance is closed, if so call `connect` function.
-  }
-
-  public connect() {
+  private connect() {
     const ws = new WebSocket('ws://localhost:8080/api/v1/canvas/ws')
     ws.binaryType = 'arraybuffer'
     const that = this // cache the this
@@ -84,20 +83,22 @@ class MainStage extends React.Component<IProps, IState> {
     }
 
     ws.onmessage = evt => {
-      // listen to data sent from the websocket server
-      //const message = JSON.parse(evt.data)
-      //this.setState({ dataFromServer: message })
-      var buf = new Uint8Array(evt.data).buffer
-      var data = new DataView(buf)
+      const buf = new Uint8Array(evt.data).buffer
+      const data = new DataView(buf)
       const color: number = data.getUint8(0)
       const y: number = data.getUint8(1)
       const x: number = data.getUint8(2)
       console.log('received: ', color, y, x)
       console.log('old: ', this.state.grid[0])
-      let n: number[][] = this.state.grid
-      n[y][x] = color
-      this.setState({ grid: n })
-      console.log('newstate: ', this.state.grid[0])
+      /* let n: number[][] = this.state.grid
+       * n[y][x] = color
+       * this.setState({ grid: n })
+       * console.log('newstate: ', this.state.grid[0]) */
+
+      // use reference to setstate in children
+      this.references[y * Constants.SQUARE_PER_ROW + x].current!.setState({
+        color: color
+      })
     }
 
     // websocket onclose event listener
@@ -124,6 +125,15 @@ class MainStage extends React.Component<IProps, IState> {
     }
   }
 
+  private check() {
+    const ws = this.state.ws
+    if (!ws || ws.readyState === WebSocket.CLOSED) this.connect() //check if websocket instance is closed, if so call `connect` function.
+  }
+
+  public componentDidMount() {
+    this.connect()
+  }
+
   public render() {
     var rows = []
     for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
@@ -131,6 +141,7 @@ class MainStage extends React.Component<IProps, IState> {
       const y = Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
       rows.push(
         <Square
+          ref={this.getOrCreateRef(i)}
           key={i}
           index={i}
           size={Constants.SQUARE_SIZE}

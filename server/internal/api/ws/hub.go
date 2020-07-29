@@ -1,6 +1,9 @@
 package ws
 
 import (
+	"math/rand"
+	"time"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -40,6 +43,7 @@ func (h *Hub) Run() {
 			}
 		case message := <-h.broadcast:
 			h.log.Infoln("hub received:", message, " size: ", len(message), " players:", len(h.clients))
+			doEvery(20*time.Millisecond, helloworld, h)
 			for client := range h.clients {
 				select {
 				case client.send <- message:
@@ -48,6 +52,36 @@ func (h *Hub) Run() {
 					delete(h.clients, client)
 				}
 			}
+		}
+	}
+}
+
+func doEvery(d time.Duration, f func(time.Time, *Hub), hub *Hub) {
+	for x := range time.Tick(d) {
+		f(x, hub)
+	}
+}
+
+func helloworld(t time.Time, hub *Hub) {
+	message := make([]byte, 3)
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+	a := r1.Intn(16)
+	b := r1.Intn(40)
+	c := r1.Intn(40)
+	// hub.log.Infoln("a", byte(a))
+	// hub.log.Infoln("b", byte(b))
+	// hub.log.Infoln("b", byte(c))
+	message[0] = byte(a)
+	message[1] = byte(b)
+	message[2] = byte(c)
+
+	for client := range hub.clients {
+		select {
+		case client.send <- message:
+		default:
+			close(client.send)
+			delete(hub.clients, client)
 		}
 	}
 }
