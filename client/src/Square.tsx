@@ -58,10 +58,6 @@ class Square extends React.Component<IProps, IState> {
     index: this.props.index!
   }
 
-  public componentWillReceiveProps(nextProps: IProps) {
-    this.setState({ color: nextProps.color! })
-  }
-
   public send(colorIndex: number) {
     try {
       const ws = this.props.ws
@@ -84,7 +80,6 @@ class Square extends React.Component<IProps, IState> {
       Math.random() * (Constants.COLOR_AMOUNT + 1)
     )
     this.send(color)
-    /* this.setState({ color }) */
   }
 
   public render() {

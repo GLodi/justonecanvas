@@ -96,6 +96,7 @@ class MainStage extends React.Component<IProps, IState> {
        * console.log('newstate: ', this.state.grid[0]) */
 
       // use reference to setstate in children
+      this.state.grid[y][x] = color
       this.references[y * Constants.SQUARE_PER_ROW + x].current!.setState({
         color: color
       })
@@ -187,6 +188,7 @@ class MainStage extends React.Component<IProps, IState> {
                 : oldScale / Constants.SCALE_BY
 
             this.setState({
+              grid: this.state.grid,
               stageScale: newScale,
               stageX:
                 -(mousePointTo.x - stage.getPointerPosition()!.x / newScale) *
