@@ -96,6 +96,7 @@ class MainStage extends React.Component<IProps, IState> {
        * console.log('newstate: ', this.state.grid[0]) */
 
       // use reference to setstate in children
+      // eslint-disable-next-line
       this.state.grid[y][x] = color
       this.references[y * Constants.SQUARE_PER_ROW + x].current!.setState({
         color: color
