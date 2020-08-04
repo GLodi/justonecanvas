@@ -1,6 +1,9 @@
 up:
 	docker-compose up
 
+upd:
+	docker-compose up -d
+
 reup:
 	docker-compose up --build
 

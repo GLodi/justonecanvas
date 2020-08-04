@@ -41,18 +41,18 @@ func (ch *canvasHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	// JSON response
-	// ctx.JSON(http.StatusOK, c)
-
 	ch.log.Println(len(out.Bytes()))
 
 	ctx.Data(http.StatusOK, "application/x-gob", out.Bytes())
+
+	// JSON response
+	// ctx.JSON(http.StatusOK, c)
 
 	ch.log.Infoln("canvas_handler /GET OK")
 }
 
 func (ch *canvasHandler) GetWs(ctx *gin.Context) {
-	ws.ServeWs(ch.log, ch.hub, ctx.Writer, ctx.Request)
+	ws.ServeWs(ch.log, ch.hub, ctx.Writer, ctx.Request, ctx.ClientIP())
 }
 
 func (ch *canvasHandler) Update(ctx *gin.Context) {

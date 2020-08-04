@@ -42,8 +42,13 @@ func (h *Hub) Run() {
 				h.log.Infoln("hub - connected:", len(h.clients))
 			}
 		case message := <-h.broadcast:
-			h.log.Infoln("hub received:", message, " size: ", len(message), " players:", len(h.clients))
-			doEvery(20*time.Millisecond, helloworld, h)
+			// HACK: this is needed for artillery testing
+			// message[0] = message[0] - 48
+			// message[1] = message[1] - 48
+			// message[2] = message[2] - 48
+			h.log.Infoln("hub received:", message)
+
+			// go doEvery(20*time.Millisecond, helloworld, h)
 			for client := range h.clients {
 				select {
 				case client.send <- message:

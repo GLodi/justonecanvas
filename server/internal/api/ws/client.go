@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -45,6 +44,9 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+
+	// Last request by user
+	last time.Time
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -64,13 +66,22 @@ func (c *Client) readPump() {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				c.hub.log.Errorln("error: %v", err)
 			}
 			break
 		}
 		// deletes last byte sometimes
 		//message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+
+		if diff := time.Now().Sub(c.last); int(diff.Minutes()) >= 1 {
+			// TODO: perform validation range check
+			//       on input before broadcasting message
+
+			c.last = time.Now()
+
+			c.hub.broadcast <- message
+		}
+
 	}
 }
 
@@ -121,14 +132,14 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func ServeWs(l *logrus.Logger, hub *Hub, w http.ResponseWriter, r *http.Request) {
+func ServeWs(l *logrus.Logger, hub *Hub, w http.ResponseWriter, r *http.Request, ip string) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		l.Errorln(err)
 		return
 	}
 
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), last: time.Unix(0, 0)}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in

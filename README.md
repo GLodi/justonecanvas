@@ -35,6 +35,13 @@ npm install
 npm start
 ```
 
+### load testing
+
+You can do load testing thanks to Artillery:
+	- `npm install -g artillery`
+	- cd in testing directory
+	- `artillery run loadtest.yml`
+
 ## production
 
 Create a .env.prod under root with your variables and
