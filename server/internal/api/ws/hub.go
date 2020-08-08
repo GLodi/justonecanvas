@@ -43,6 +43,7 @@ func (h *Hub) Run() {
 			}
 		case message := <-h.broadcast:
 			// HACK: this is needed for artillery testing
+			//       because it doesn't allow binary data over ws
 			// message[0] = message[0] - 48
 			// message[1] = message[1] - 48
 			// message[2] = message[2] - 48

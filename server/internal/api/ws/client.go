@@ -74,12 +74,16 @@ func (c *Client) readPump() {
 		//message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 
 		if diff := time.Now().Sub(c.last); int(diff.Minutes()) >= 1 {
-			// TODO: perform validation range check
-			//       on input before broadcasting message
 
-			c.last = time.Now()
+			if message[0] >= 0 && message[0] < 16 &&
+				message[1] >= 0 && message[1] < 40 &&
+				message[2] >= 0 && message[2] < 40 {
 
-			c.hub.broadcast <- message
+				c.last = time.Now()
+
+				c.hub.broadcast <- message
+			}
+
 		}
 
 	}
@@ -138,6 +142,8 @@ func ServeWs(l *logrus.Logger, hub *Hub, w http.ResponseWriter, r *http.Request,
 		l.Errorln(err)
 		return
 	}
+
+	l.Infoln(ip)
 
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), last: time.Unix(0, 0)}
 	client.hub.register <- client
