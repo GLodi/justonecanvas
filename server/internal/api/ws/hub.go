@@ -16,6 +16,8 @@ type Hub struct {
 
 	unregister chan *Client
 
+	ips map[string]time.Time
+
 	log *logrus.Logger
 }
 
@@ -25,6 +27,7 @@ func NewHub(l *logrus.Logger) *Hub {
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[*Client]bool),
+		ips:        make(map[string]time.Time),
 		log:        l,
 	}
 }
@@ -72,9 +75,9 @@ func helloworld(t time.Time, hub *Hub) {
 	message := make([]byte, 3)
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
-	a := r1.Intn(16)
-	b := r1.Intn(40)
-	c := r1.Intn(40)
+	a := r1.Intn(COLOR_AMOUNT)
+	b := r1.Intn(SQUARE_PER_ROW)
+	c := r1.Intn(SQUARE_PER_ROW)
 	// hub.log.Infoln("a", byte(a))
 	// hub.log.Infoln("b", byte(b))
 	// hub.log.Infoln("b", byte(c))

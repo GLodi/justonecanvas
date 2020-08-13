@@ -88,7 +88,6 @@ class MainStage extends React.Component<IProps, IState> {
       const y: number = data.getUint8(1)
       const x: number = data.getUint8(2)
       console.log('received: ', color, y, x)
-      console.log('old: ', this.state.grid[0])
       /* let n: number[][] = this.state.grid
        * n[y][x] = color
        * this.setState({ grid: n })

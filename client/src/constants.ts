@@ -1,16 +1,17 @@
 export class Constants {
-  // Total amount of squares in grid. Must be square.
-  public static readonly SQUARE_AMOUNT: number = 1600
+  public static readonly SQUARE_PER_ROW: number = 50
 
-  public static readonly SQUARE_PER_ROW: number = Math.sqrt(
-    Constants.SQUARE_AMOUNT
+  // Total amount of squares in grid. Must be square.
+  public static readonly SQUARE_AMOUNT: number = Math.pow(
+    Constants.SQUARE_PER_ROW,
+    2
   )
 
   // Amount of pixels for each square
   public static readonly SQUARE_SIZE: number = 1
 
   // Number of react-konva layers
-  public static readonly LAYERS_AMOUNT: number = 2
+  public static readonly LAYERS_AMOUNT: number = 3
 
   // React-konva grid starting scale
   public static readonly START_SCALE: number = 20

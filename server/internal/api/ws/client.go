@@ -2,6 +2,7 @@ package ws
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -20,6 +21,10 @@ const (
 
 	// Maximum message size allowed from peer.
 	maxMessageSize = 512
+
+	COLOR_AMOUNT = 16
+
+	SQUARE_PER_ROW = 50
 )
 
 var (
@@ -45,8 +50,7 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan []byte
 
-	// Last request by user
-	last time.Time
+	ip string
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -73,13 +77,18 @@ func (c *Client) readPump() {
 		// deletes last byte sometimes
 		//message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 
-		if diff := time.Now().Sub(c.last); int(diff.Minutes()) >= 1 {
+		ra := c.conn.RemoteAddr().String()
+		ip := ra[:strings.IndexByte(ra, ':')]
 
-			if message[0] >= 0 && message[0] < 16 &&
-				message[1] >= 0 && message[1] < 40 &&
-				message[2] >= 0 && message[2] < 40 {
+		diff := time.Now().Sub(c.hub.ips[ip])
 
-				c.last = time.Now()
+		if int(diff.Minutes()) >= 1 {
+
+			if message[0] >= 0 && message[0] < COLOR_AMOUNT &&
+				message[1] >= 0 && message[1] < SQUARE_PER_ROW &&
+				message[2] >= 0 && message[2] < SQUARE_PER_ROW {
+
+				c.hub.ips[ip] = time.Now()
 
 				c.hub.broadcast <- message
 			}
@@ -143,9 +152,9 @@ func ServeWs(l *logrus.Logger, hub *Hub, w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	l.Infoln(ip)
+	hub.ips[ip] = time.Unix(0, 0)
 
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), last: time.Unix(0, 0)}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), ip: ip}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
