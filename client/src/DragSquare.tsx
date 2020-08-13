@@ -1,6 +1,6 @@
 import * as React from 'react'
+import Konva from 'konva'
 import { Rect } from 'react-konva'
-import { Constants } from './constants'
 
 const map = [
   'white',
@@ -38,7 +38,9 @@ interface IState {
   index: number
 }
 
-class Square extends React.Component<IProps, IState> {
+class DragSquare extends React.Component<IProps, IState> {
+  public rect: Konva.Rect | null = null
+
   public static defaultProps: Partial<IProps> = {
     color: 0,
     offsetX: 0,
@@ -56,42 +58,46 @@ class Square extends React.Component<IProps, IState> {
     index: this.props.index!
   }
 
-  public send(colorIndex: number) {
-    try {
-      const ws = this.props.ws
-      const data = Uint8Array.from([
-        colorIndex,
-        Math.floor(this.state.index / Constants.SQUARE_PER_ROW),
-        this.state.index % Constants.SQUARE_PER_ROW
-      ])
-      console.log('sending: ', data)
-      if (ws != null) {
-        ws.send(data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  public boh = () => {
+    if (this.rect != null) {
+      const x: number = Math.round(this.rect.getPosition().x)
+      const y: number = Math.round(this.rect.getPosition().y)
+      console.log(x, y)
+      this.rect.to({
+        x: this.state.offsetX,
+        y: this.state.offsetY,
+        duration: 0
+      })
 
-  public changeColor = () => {
-    const color: number = Math.floor(
-      Math.random() * (Constants.COLOR_AMOUNT + 1)
-    )
-    this.send(color)
+      try {
+        const ws = this.props.ws
+        const data = Uint8Array.from([this.state.color, y, x])
+        console.log('sending: ', data)
+        if (ws != null) {
+          ws.send(data)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 
   public render() {
     return (
       <Rect
+        ref={node => {
+          this.rect = node
+        }}
         x={this.state.offsetX}
         y={this.state.offsetY}
         width={this.state.size}
         height={this.state.size}
         fill={map[this.state.color]}
-        onClick={this.changeColor}
+        onDragEnd={this.boh.bind(this)}
+        draggable={true}
       />
     )
   }
 }
 
-export default Square
+export default DragSquare

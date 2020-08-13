@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { Stage, Layer } from 'react-konva'
 import Square from './Square'
-// eslint-disable-next-line
-import { w3cwebsocket } from 'websocket'
+import DragSquare from './DragSquare'
 import { Constants } from './constants'
 
 interface IProps {
@@ -169,6 +168,24 @@ class MainStage extends React.Component<IProps, IState> {
       }
       layers.push(<Layer key={j}>{layerRows}</Layer>)
     }
+
+    var colors = []
+    for (k = 0; k < Constants.COLOR_AMOUNT; k++) {
+      const x = (Constants.SQUARE_PER_ROW + 2) * Constants.SQUARE_SIZE
+      const y = k * 2 * Constants.SQUARE_SIZE
+      colors.push(
+        <DragSquare
+          key={k}
+          index={k}
+          size={Constants.SQUARE_SIZE}
+          ws={this.state.ws}
+          color={k}
+          offsetX={x}
+          offsetY={y}
+        />
+      )
+    }
+    layers.push(<Layer key={Constants.LAYERS_AMOUNT}>{colors}</Layer>)
 
     return (
       <Stage

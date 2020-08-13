@@ -54,3 +54,5 @@ Thanks to pprof package, you can:
 `wget http://localhost:8080/debug/pprof/trace\?seconds\=5` to profile 5 seconds of execution.
 
 `go tool trace 'trace?seconds=5'` to analyze.
+
+Remember to add `pprof.Register(g)` in main.go.

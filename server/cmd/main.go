@@ -6,6 +6,7 @@ import (
 
 	"github.com/GLodi/justonecanvas/server/internal/api"
 	"github.com/GLodi/justonecanvas/server/internal/di"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -18,6 +19,8 @@ func main() {
 }
 func run() error {
 	g := gin.Default()
+	pprof.Register(g)
+
 	d := di.BuildContainer()
 
 	var l *logrus.Logger
