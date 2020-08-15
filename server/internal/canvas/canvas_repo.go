@@ -8,13 +8,12 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repository interface {
 	Get() (*Canvas, error)
-	Update(pos int, color uint8) (*Canvas, error)
+	Update(pos int, color uint8) error
 }
 
 type repo struct {
@@ -71,24 +70,27 @@ func (r *repo) Get() (c *Canvas, err error) {
 	return c, nil
 }
 
-func (r *repo) Update(pos int, color uint8) (c *Canvas, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+func (r *repo) Update(pos int, color uint8) (err error) {
+	// would need to make return type of uc.Update in (*Canvas, err)
+	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	// defer cancel()
 
-	collection := r.mongo.Database("canvas").Collection("canvas")
-	_, err = collection.UpdateMany(ctx,
-		bson.M{"id": "1"},
-		bson.M{"$set": bson.M{"cells." + strconv.Itoa(pos): color}},
-	)
-	if err != nil {
-		r.log.Errorln("canvas_repo Update() UPDATEONE:", err)
-		return nil, err
-	}
+	// collection := r.mongo.Database("canvas").Collection("canvas")
+	// _, err = collection.UpdateMany(ctx,
+	// 	bson.M{"id": "1"},
+	// 	bson.M{"$set": bson.M{"cells." + strconv.Itoa(pos): color}},
+	// )
+	// if err != nil {
+	// 	r.log.Errorln("canvas_repo Update() UPDATEONE:", err)
+	// 	return err
+	// }
 
-	err = collection.FindOne(ctx, bson.M{}).Decode(&c)
-	if err != nil {
-		r.log.Errorln("canvas_repo Update() FINDONE:", err)
-		return nil, err
-	}
-	return c, nil
+	// err = collection.FindOne(ctx, bson.M{}).Decode(&c)
+	// if err != nil {
+	// 	r.log.Errorln("canvas_repo Update() FINDONE:", err)
+	// 	return err
+	// }
+	// return nil
+
+	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/GLodi/justonecanvas/server/internal/constants"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 )
@@ -21,10 +22,6 @@ const (
 
 	// Maximum message size allowed from peer.
 	maxMessageSize = 512
-
-	COLOR_AMOUNT = 16
-
-	SQUARE_PER_ROW = 50
 )
 
 var (
@@ -80,20 +77,22 @@ func (c *Client) readPump() {
 		ra := c.conn.RemoteAddr().String()
 		ip := ra[:strings.IndexByte(ra, ':')]
 
-		diff := time.Now().Sub(c.hub.ips[ip])
+		// HACK: to skip ip address check for load testing
+		// diff := time.Duration(1)
+		// diff := time.Now().Sub(c.hub.ips[ip])
 
-		if int(diff.Minutes()) >= 1 {
+		// if int(diff.Minutes()) >= 1 {
 
-			if message[0] >= 0 && message[0] < COLOR_AMOUNT &&
-				message[1] >= 0 && message[1] < SQUARE_PER_ROW &&
-				message[2] >= 0 && message[2] < SQUARE_PER_ROW {
+		if message[0] >= 0 && message[0] < constants.SquarePerRow &&
+			message[1] >= 0 && message[1] < constants.SquarePerRow &&
+			message[2] >= 0 && message[2] < constants.SquarePerRow {
 
-				c.hub.ips[ip] = time.Now()
+			c.hub.ips[ip] = time.Now()
 
-				c.hub.broadcast <- message
-			}
-
+			c.hub.broadcast <- message
 		}
+
+		// }
 
 	}
 }

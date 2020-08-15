@@ -50,5 +50,7 @@ func (ds *dserver) canvasRoutes(api *gin.RouterGroup) {
 		canvasRoutes.GET("/", ch.Get)
 		canvasRoutes.GET("/ws", ch.GetWs)
 		canvasRoutes.PUT("/:index/color/:color", ch.Update)
+
+		go ch.UpdateRedis()
 	}
 }

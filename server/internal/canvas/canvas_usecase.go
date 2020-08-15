@@ -6,7 +6,7 @@ import (
 
 type UseCase interface {
 	Get() (*Canvas, error)
-	Update(pos int, color uint8) (*Canvas, error)
+	Update(pos int, color uint8) error
 }
 
 type usecase struct {
@@ -25,6 +25,6 @@ func (u *usecase) Get() (*Canvas, error) {
 	return u.repo.Get()
 }
 
-func (u *usecase) Update(pos int, color uint8) (*Canvas, error) {
+func (u *usecase) Update(pos int, color uint8) error {
 	return u.repo.Update(pos, color)
 }

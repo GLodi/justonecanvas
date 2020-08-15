@@ -24,7 +24,7 @@ func NewRedis(log *logrus.Logger, m *mongo.Client) (client *redis.Client) {
 	})
 
 	c := &canvas.Canvas{}
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	collection := m.Database("canvas").Collection("canvas")

@@ -34,7 +34,7 @@ func NewMongo(log *logrus.Logger) (client *mongo.Client, err error) {
 		return nil, err
 	}
 
-	ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
