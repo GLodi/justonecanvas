@@ -5,6 +5,7 @@ import (
 
 	"github.com/GLodi/justonecanvas/server/internal/api/ws"
 	"github.com/GLodi/justonecanvas/server/internal/canvas"
+	"github.com/GLodi/justonecanvas/server/internal/constants"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -23,9 +24,7 @@ func (ch *canvasHandler) UpdateRedis() {
 	for {
 		select {
 		case message := <-ch.hub.Store:
-			ch.log.Infoln("canvas_handler UpdateRedis:", message)
-			// TODO: parse from byte to (pos int, color uint8)
-			// ch.uc.Update()
+			ch.uc.Update(int(message[1])*constants.SquarePerRow+int(message[2]), message[0])
 		}
 
 	}

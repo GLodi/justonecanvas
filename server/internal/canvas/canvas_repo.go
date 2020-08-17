@@ -47,7 +47,6 @@ func (r *repo) Get() (c *Canvas, err error) {
 	c = &Canvas{}
 
 	if len(args) == 0 {
-		r.log.Infoln("ECCOMIT")
 		for i := 0; i < constants.Squares; i++ {
 			args = append(args, "GET")
 			args = append(args, "u4")
