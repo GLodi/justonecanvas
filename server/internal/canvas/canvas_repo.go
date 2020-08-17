@@ -61,7 +61,7 @@ func (r *repo) Get() (c *Canvas, err error) {
 	}
 
 	b := make([]byte, 8)
-	for i := 0; i < constants.SquarePerRow; i++ {
+	for i := 0; i < constants.Squares; i++ {
 		binary.LittleEndian.PutUint64(b, uint64(val[i]))
 		c.Cells[i].Color = b[0]
 
