@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/GLodi/justonecanvas/server/internal/api"
+	"github.com/GLodi/justonecanvas/server/internal/api/rest"
 	"github.com/GLodi/justonecanvas/server/internal/di"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 )
 
@@ -22,6 +25,10 @@ func run() error {
 	pprof.Register(g)
 
 	d := di.BuildContainer()
+
+	d.Invoke(func(redClient *redis.Client) {
+		g.Use(rest.NewRateLimiterMiddleware(redClient, "general", 30, 60*time.Second))
+	})
 
 	var l *logrus.Logger
 	d.Invoke(func(log *logrus.Logger) {
