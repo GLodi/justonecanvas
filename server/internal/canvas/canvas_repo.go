@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/GLodi/justonecanvas/server/internal/constants"
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -47,7 +48,7 @@ func (r *repo) Get() (c *Canvas, err error) {
 
 	if len(args) == 0 {
 		r.log.Infoln("ECCOMIT")
-		for i := 0; i < 2500; i++ {
+		for i := 0; i < constants.Squares; i++ {
 			args = append(args, "GET")
 			args = append(args, "u4")
 			args = append(args, "#"+strconv.Itoa(i))
@@ -61,7 +62,7 @@ func (r *repo) Get() (c *Canvas, err error) {
 	}
 
 	b := make([]byte, 8)
-	for i := 0; i < 2500; i++ {
+	for i := 0; i < constants.SquarePerRow; i++ {
 		binary.LittleEndian.PutUint64(b, uint64(val[i]))
 		c.Cells[i].Color = b[0]
 
@@ -71,26 +72,13 @@ func (r *repo) Get() (c *Canvas, err error) {
 }
 
 func (r *repo) Update(pos int, color uint8) (err error) {
-	// would need to make return type of uc.Update in (*Canvas, err)
-	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	// defer cancel()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	// collection := r.mongo.Database("canvas").Collection("canvas")
-	// _, err = collection.UpdateMany(ctx,
-	// 	bson.M{"id": "1"},
-	// 	bson.M{"$set": bson.M{"cells." + strconv.Itoa(pos): color}},
-	// )
-	// if err != nil {
-	// 	r.log.Errorln("canvas_repo Update() UPDATEONE:", err)
-	// 	return err
-	// }
+	err = r.redis.BitField(ctx, "canvas", "SET", "u4", "#"+strconv.Itoa(pos), color).Err()
 
-	// err = collection.FindOne(ctx, bson.M{}).Decode(&c)
-	// if err != nil {
-	// 	r.log.Errorln("canvas_repo Update() FINDONE:", err)
-	// 	return err
-	// }
-	// return nil
-
-	return nil
+	if err != nil {
+		r.log.Errorln("canvas_repo Update() CAN'T UPDATE CANVAS:", err)
+	}
+	return err
 }

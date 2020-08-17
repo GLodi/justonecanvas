@@ -77,10 +77,9 @@ func (c *Client) readPump() {
 		ra := c.conn.RemoteAddr().String()
 		ip := ra[:strings.IndexByte(ra, ':')]
 
-		// HACK: to skip ip address check for load testing
-		// diff := time.Duration(1)
 		// diff := time.Now().Sub(c.hub.ips[ip])
 
+		// HACK: to skip ip address check for load testing, comment if
 		// if int(diff.Minutes()) >= 1 {
 
 		if message[0] >= 0 && message[0] < constants.SquarePerRow &&

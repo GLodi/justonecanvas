@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/GLodi/justonecanvas/server/internal/canvas"
+	"github.com/GLodi/justonecanvas/server/internal/constants"
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,7 +34,7 @@ func NewRedis(log *logrus.Logger, m *mongo.Client) (client *redis.Client) {
 		log.Errorln("NewRedis CAN'T FIND CANVAS:", err)
 	}
 
-	for i := 0; i < 2500; i++ {
+	for i := 0; i < constants.Squares; i++ {
 		err := client.BitField(ctx, "canvas", "SET", "u4", "#"+strconv.Itoa(i), c.Cells[i].Color).Err()
 
 		if err != nil {

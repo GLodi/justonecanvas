@@ -1,10 +1,14 @@
 package canvas
 
-import "time"
+import (
+	"time"
+
+	"github.com/GLodi/justonecanvas/server/internal/constants"
+)
 
 type Canvas struct {
-	ID    string     `json:"id"`
-	Cells [2500]Cell `json:"cells"`
+	ID    string                  `json:"id"`
+	Cells [constants.Squares]Cell `json:"cells"`
 }
 
 type Cell struct {
