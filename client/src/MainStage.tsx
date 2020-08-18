@@ -66,6 +66,10 @@ class MainStage extends React.Component<IProps, IState> {
   }
 
   private connect() {
+    fetch('/api/v1/canvas')
+      .then(res => res.json())
+      .then(data => console.log(data))
+
     const ws = new WebSocket('ws://localhost:8080/api/v1/canvas/ws')
     ws.binaryType = 'arraybuffer'
     const that = this // cache the this
