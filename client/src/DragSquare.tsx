@@ -1,6 +1,8 @@
 import * as React from 'react'
 import Konva from 'konva'
 import { Rect } from 'react-konva'
+import { constants } from 'buffer'
+import { Constants } from './constants'
 
 const map = [
   'white',
@@ -62,22 +64,28 @@ class DragSquare extends React.Component<IProps, IState> {
     if (this.rect != null) {
       const x: number = Math.round(this.rect.getPosition().x)
       const y: number = Math.round(this.rect.getPosition().y)
-      console.log(x, y)
       this.rect.to({
         x: this.state.offsetX,
         y: this.state.offsetY,
         duration: 0
       })
 
-      try {
-        const ws = this.props.ws
-        const data = Uint8Array.from([this.state.color, y, x])
-        console.log('sending: ', data)
-        if (ws != null) {
-          ws.send(data)
+      if (
+        x >= 0 &&
+        x < Constants.SQUARE_PER_ROW &&
+        y >= 0 &&
+        y < Constants.SQUARE_PER_ROW
+      ) {
+        try {
+          const ws = this.props.ws
+          const data = Uint8Array.from([this.state.color, y, x])
+          console.log('sending: ', data)
+          if (ws != null) {
+            ws.send(data)
+          }
+        } catch (error) {
+          console.log(error)
         }
-      } catch (error) {
-        console.log(error)
       }
     }
   }

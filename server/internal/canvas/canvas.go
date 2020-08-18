@@ -1,8 +1,6 @@
 package canvas
 
 import (
-	"time"
-
 	"github.com/GLodi/justonecanvas/server/internal/constants"
 )
 
@@ -12,6 +10,5 @@ type Canvas struct {
 }
 
 type Cell struct {
-	Timestamp time.Time `json:"timestamp"`
-	Color     byte      `json:"color"`
+	Color byte `json:"color"`
 }

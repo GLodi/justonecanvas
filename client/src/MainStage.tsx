@@ -68,7 +68,13 @@ class MainStage extends React.Component<IProps, IState> {
   private connect() {
     fetch('/api/v1/canvas')
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(
+        data => {
+          this.setState({})
+          console.log(data)
+        },
+        error => {}
+      )
 
     const ws = new WebSocket('ws://localhost:8080/api/v1/canvas/ws')
     ws.binaryType = 'arraybuffer'
@@ -222,7 +228,6 @@ class MainStage extends React.Component<IProps, IState> {
         }}
         scaleX={this.state.stageScale}
         scaleY={this.state.stageScale}
-        draggable={true}
         width={window.innerWidth}
         height={window.innerHeight}
         x={this.state.stageX}

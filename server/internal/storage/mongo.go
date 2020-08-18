@@ -50,8 +50,7 @@ func NewMongo(log *logrus.Logger) (client *mongo.Client, err error) {
 
 		c := &canvas.Canvas{ID: "1"}
 		cell := canvas.Cell{
-			Timestamp: time.Now(),
-			Color:     0,
+			Color: 0,
 		}
 		for i := 0; i < constants.Squares; i++ {
 			c.Cells[i] = cell
