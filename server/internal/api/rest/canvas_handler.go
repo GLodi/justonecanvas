@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/GLodi/justonecanvas/server/internal/api/ws"
 	"github.com/GLodi/justonecanvas/server/internal/canvas"
@@ -27,6 +28,12 @@ func (ch *canvasHandler) UpdateRedis() {
 			ch.uc.Update(int(message[1])*constants.SquarePerRow+int(message[2]), message[0])
 		}
 
+	}
+}
+
+func (ch *canvasHandler) UpdateMongo() {
+	for range time.Tick(5 * time.Second) {
+		ch.uc.LiveUpdate()
 	}
 }
 

@@ -77,16 +77,20 @@ func (c *Client) readPump() {
 		ra := c.conn.RemoteAddr().String()
 		ip := ra[:strings.IndexByte(ra, ':')]
 
+		c.hub.lock.RLock()
 		// diff := time.Now().Sub(c.hub.ips[ip])
+		c.hub.lock.RUnlock()
 
-		// HACK: to skip ip address check for load testing, comment if
+		// HACK: uncomment this for artillery
 		// if int(diff.Minutes()) >= 1 {
 
 		if message[0] >= 0 && message[0] < constants.SquarePerRow &&
 			message[1] >= 0 && message[1] < constants.SquarePerRow &&
 			message[2] >= 0 && message[2] < constants.SquarePerRow {
 
+			c.hub.lock.Lock()
 			c.hub.ips[ip] = time.Now()
+			c.hub.lock.Unlock()
 
 			c.hub.broadcast <- message
 		}
@@ -150,7 +154,9 @@ func ServeWs(l *logrus.Logger, hub *Hub, w http.ResponseWriter, r *http.Request,
 		return
 	}
 
+	hub.lock.Lock()
 	hub.ips[ip] = time.Unix(0, 0)
+	hub.lock.Unlock()
 
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), ip: ip}
 	client.hub.register <- client

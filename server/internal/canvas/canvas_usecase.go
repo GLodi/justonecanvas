@@ -7,6 +7,7 @@ import (
 type UseCase interface {
 	Get() (*Canvas, error)
 	Update(pos int, color uint8) error
+	LiveUpdate()
 }
 
 type usecase struct {
@@ -27,4 +28,13 @@ func (u *usecase) Get() (*Canvas, error) {
 
 func (u *usecase) Update(pos int, color uint8) error {
 	return u.repo.Update(pos, color)
+}
+
+func (u *usecase) LiveUpdate() {
+	canv, err := u.repo.Get()
+	if err != nil {
+		u.log.Errorln("canvas_handler UpdateMongo:", err)
+		return
+	}
+	u.repo.Store(canv)
 }

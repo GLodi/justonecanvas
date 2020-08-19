@@ -2,6 +2,7 @@ package ws
 
 import (
 	"math/rand"
+	"sync"
 	"time"
 
 	"github.com/GLodi/justonecanvas/server/internal/constants"
@@ -21,6 +22,8 @@ type Hub struct {
 
 	ips map[string]time.Time
 
+	lock sync.RWMutex
+
 	log *logrus.Logger
 }
 
@@ -32,6 +35,7 @@ func NewHub(l *logrus.Logger) *Hub {
 		unregister: make(chan *Client),
 		clients:    make(map[*Client]bool),
 		ips:        make(map[string]time.Time),
+		lock:       sync.RWMutex{},
 		log:        l,
 	}
 }
@@ -49,15 +53,16 @@ func (h *Hub) Run() {
 				h.log.Infoln("hub - connected:", len(h.clients))
 			}
 		case message := <-h.broadcast:
-			// HACK: this is needed for artillery testing
-			//       because it doesn't allow binary data over ws
+			// HACK: uncomment this for artillery
 			// message[0] = message[0] - 48
 			// message[1] = message[1] - 48
 			// message[2] = message[2] - 48
+
 			h.log.Infoln("hub received:", message)
 
 			h.Store <- message
 
+			// HACK: load test manually without artillery
 			// go doEvery(20*time.Millisecond, helloworld, h)
 			for client := range h.clients {
 				select {

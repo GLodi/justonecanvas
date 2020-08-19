@@ -9,12 +9,14 @@ import (
 	"github.com/GLodi/justonecanvas/server/internal/constants"
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repository interface {
 	Get() (*Canvas, error)
 	Update(pos int, color uint8) error
+	Store(*Canvas)
 }
 
 type repo struct {
@@ -80,4 +82,17 @@ func (r *repo) Update(pos int, color uint8) (err error) {
 		r.log.Errorln("canvas_repo Update() CAN'T UPDATE CANVAS:", err)
 	}
 	return err
+}
+
+func (r *repo) Store(canvas *Canvas) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	collection := r.mongo.Database("canvas").Collection("canvas")
+
+	canvas.ID = "1"
+
+	filter := bson.M{"_id": "1"}
+
+	collection.ReplaceOne(ctx, filter, &canvas)
 }

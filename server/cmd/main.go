@@ -8,7 +8,6 @@ import (
 	"github.com/GLodi/justonecanvas/server/internal/api"
 	"github.com/GLodi/justonecanvas/server/internal/api/rest"
 	"github.com/GLodi/justonecanvas/server/internal/di"
-	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
@@ -22,10 +21,11 @@ func main() {
 }
 func run() error {
 	g := gin.Default()
-	pprof.Register(g)
+	// pprof.Register(g)
 
 	d := di.BuildContainer()
 
+	// HACK: uncomment this for artillery
 	d.Invoke(func(redClient *redis.Client) {
 		g.Use(rest.NewRateLimiterMiddleware(redClient, "general", 100, 60*time.Second))
 	})

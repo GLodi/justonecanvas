@@ -51,5 +51,6 @@ func (ds *dserver) canvasRoutes(api *gin.RouterGroup) {
 		canvasRoutes.GET("/ws", ch.GetWs)
 
 		go ch.UpdateRedis()
+		go ch.UpdateMongo()
 	}
 }

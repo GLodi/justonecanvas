@@ -5,7 +5,7 @@ import (
 )
 
 type Canvas struct {
-	ID    string                  `json:"id"`
+	ID    string                  `bson:"_id,omitempty" json:"id"`
 	Cells [constants.Squares]Cell `json:"cells"`
 }
 
