@@ -25,7 +25,6 @@ interface IProps {
   offsetX?: number
   offsetY?: number
   size?: number
-  ws?: WebSocket | null
   index?: number
 }
 
@@ -43,7 +42,6 @@ class Square extends React.Component<IProps, IState> {
     offsetX: 0,
     offsetY: 0,
     size: 40,
-    ws: null,
     index: 0
   }
 
@@ -55,7 +53,18 @@ class Square extends React.Component<IProps, IState> {
     index: this.props.index!
   }
 
+  public shouldComponentUpdate(
+    nextProps: Readonly<IProps>,
+    nextState: Readonly<IState>,
+    nextContext: any
+  ) {
+    return true
+  }
+
   public render() {
+    if (this.state.offsetX === 0 && this.state.offsetY === 0) {
+      console.log(this.state.color)
+    }
     return (
       <Rect
         x={this.state.offsetX}

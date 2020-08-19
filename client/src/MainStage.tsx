@@ -24,6 +24,9 @@ class MainStage extends React.Component<IProps, IState> {
   references = Array(Constants.SQUARE_AMOUNT)
     .fill(0)
     .map(() => React.createRef<Square>())
+  referencesDrag = Array(Constants.COLOR_AMOUNT)
+    .fill(0)
+    .map(() => React.createRef<DragSquare>())
 
   public static defaultProps: Partial<IProps> = {
     stageX: 0,
@@ -52,8 +55,15 @@ class MainStage extends React.Component<IProps, IState> {
     return this.references[id]
   }
 
+  private getOrCreateRefDrag(id: number): React.RefObject<DragSquare> {
+    if (!this.referencesDrag.hasOwnProperty(id)) {
+      this.referencesDrag[id] = React.createRef<DragSquare>()
+    }
+    return this.referencesDrag[id]
+  }
+
   private makegrid(): number[][] {
-    let grid: number[][] = new Array(Constants.SQUARE_PER_ROW)
+    const grid: number[][] = new Array(Constants.SQUARE_PER_ROW)
       .fill(0)
       .map(() => new Array(Constants.SQUARE_PER_ROW).fill(0))
     for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
@@ -70,8 +80,16 @@ class MainStage extends React.Component<IProps, IState> {
       .then(res => res.json())
       .then(
         data => {
-          this.setState({})
-          console.log(data)
+          const grid2: number[][] = new Array(Constants.SQUARE_PER_ROW)
+            .fill(0)
+            .map(() => new Array(Constants.SQUARE_PER_ROW).fill(0))
+          for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
+            const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+            const y =
+              Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+            grid2[y][x] = data['cells'][i]['color']
+          }
+          this.setState({ grid: grid2 })
         },
         error => {}
       )
@@ -85,7 +103,11 @@ class MainStage extends React.Component<IProps, IState> {
     ws.onopen = () => {
       console.log('connected websocket main component')
 
-      this.setState({ ws: ws })
+      for (var i = 0; i < Constants.COLOR_AMOUNT; i++) {
+        this.referencesDrag[i].current!.setState({
+          ws: ws
+        })
+      }
 
       that.timeout = 250 // reset timer to 250 on open of websocket connection
       clearTimeout(connectInterval) // clear Interval on on open of websocket connection
@@ -98,11 +120,6 @@ class MainStage extends React.Component<IProps, IState> {
       const y: number = data.getUint8(1)
       const x: number = data.getUint8(2)
       console.log('received: ', color, y, x)
-      /* let n: number[][] = this.state.grid
-       * n[y][x] = color
-       * this.setState({ grid: n })
-       * console.log('newstate: ', this.state.grid[0]) */
-
       // use reference to setstate in children
       // eslint-disable-next-line
       this.state.grid[y][x] = color
@@ -145,6 +162,7 @@ class MainStage extends React.Component<IProps, IState> {
   }
 
   public render() {
+    console.log('render', this.state.grid[0][0])
     var rows = []
     for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
       const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
@@ -155,7 +173,6 @@ class MainStage extends React.Component<IProps, IState> {
           key={i}
           index={i}
           size={Constants.SQUARE_SIZE}
-          ws={this.state.ws}
           color={this.state.grid[y][x]}
           offsetX={x}
           offsetY={y}
@@ -184,10 +201,10 @@ class MainStage extends React.Component<IProps, IState> {
       const y = k * 2 * Constants.SQUARE_SIZE
       colors.push(
         <DragSquare
+          ref={this.getOrCreateRefDrag(k)}
           key={k}
           index={k}
           size={Constants.SQUARE_SIZE}
-          ws={this.state.ws}
           color={k}
           offsetX={x}
           offsetY={y}

@@ -27,7 +27,7 @@ func run() error {
 	d := di.BuildContainer()
 
 	d.Invoke(func(redClient *redis.Client) {
-		g.Use(rest.NewRateLimiterMiddleware(redClient, "general", 30, 60*time.Second))
+		g.Use(rest.NewRateLimiterMiddleware(redClient, "general", 100, 60*time.Second))
 	})
 
 	var l *logrus.Logger

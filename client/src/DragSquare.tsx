@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Konva from 'konva'
 import { Rect } from 'react-konva'
-import { constants } from 'buffer'
 import { Constants } from './constants'
 
 const map = [
@@ -38,6 +37,7 @@ interface IState {
   offsetY: number
   size: number
   index: number
+  ws: WebSocket | null
 }
 
 class DragSquare extends React.Component<IProps, IState> {
@@ -57,7 +57,8 @@ class DragSquare extends React.Component<IProps, IState> {
     offsetX: this.props.offsetX!,
     offsetY: this.props.offsetY!,
     size: this.props.size!,
-    index: this.props.index!
+    index: this.props.index!,
+    ws: this.props.ws!
   }
 
   public boh = () => {
@@ -77,7 +78,7 @@ class DragSquare extends React.Component<IProps, IState> {
         y < Constants.SQUARE_PER_ROW
       ) {
         try {
-          const ws = this.props.ws
+          const ws = this.state.ws
           const data = Uint8Array.from([this.state.color, y, x])
           console.log('sending: ', data)
           if (ws != null) {
