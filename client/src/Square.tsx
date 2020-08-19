@@ -53,18 +53,14 @@ class Square extends React.Component<IProps, IState> {
     index: this.props.index!
   }
 
-  public shouldComponentUpdate(
-    nextProps: Readonly<IProps>,
-    nextState: Readonly<IState>,
-    nextContext: any
-  ) {
+  public UNSAFE_componentWillReceiveProps(nextP: Readonly<IProps>) {
+    if (nextP.color !== this.state.color && nextP !== undefined) {
+      this.setState({ color: nextP.color! })
+    }
     return true
   }
 
   public render() {
-    if (this.state.offsetX === 0 && this.state.offsetY === 0) {
-      console.log(this.state.color)
-    }
     return (
       <Rect
         x={this.state.offsetX}

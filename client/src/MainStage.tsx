@@ -162,7 +162,6 @@ class MainStage extends React.Component<IProps, IState> {
   }
 
   public render() {
-    console.log('render', this.state.grid[0][0])
     var rows = []
     for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
       const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
