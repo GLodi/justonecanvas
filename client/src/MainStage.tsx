@@ -20,6 +20,7 @@ interface IState {
 }
 
 class MainStage extends React.Component<IProps, IState> {
+  url = ''
   timeout = 250
   references = Array(Constants.SQUARE_AMOUNT)
     .fill(0)
@@ -78,21 +79,18 @@ class MainStage extends React.Component<IProps, IState> {
   private connect() {
     fetch('/api/v1/canvas')
       .then(res => res.json())
-      .then(
-        data => {
-          const grid2: number[][] = new Array(Constants.SQUARE_PER_ROW)
-            .fill(0)
-            .map(() => new Array(Constants.SQUARE_PER_ROW).fill(0))
-          for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
-            const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
-            const y =
-              Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
-            grid2[y][x] = data['cells'][i]['color']
-          }
-          this.setState({ grid: grid2 })
-        },
-        error => {}
-      )
+      .then(data => {
+        const grid2: number[][] = new Array(Constants.SQUARE_PER_ROW)
+          .fill(0)
+          .map(() => new Array(Constants.SQUARE_PER_ROW).fill(0))
+        for (var i = 0; i < Constants.SQUARE_AMOUNT; i++) {
+          const x = (i % Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+          const y =
+            Math.floor(i / Constants.SQUARE_PER_ROW) * Constants.SQUARE_SIZE
+          grid2[y][x] = data['cells'][i]['color']
+        }
+        this.setState({ grid: grid2 })
+      })
 
     const ws = new WebSocket('ws://localhost:8080/api/v1/canvas/ws')
     ws.binaryType = 'arraybuffer'

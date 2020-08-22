@@ -4,8 +4,10 @@ services:
 
   client:
     build: ./client
+    env_file:
+      .env
     ports:
-      - 3000:3000
+      - ${CLIENT_PORT}:${CLIENT_PORT}
     depends_on:
       - server
     environment:
@@ -22,7 +24,7 @@ services:
     env_file:
       .env
     ports:
-      - ${BACK_PORT}:${BACK_PORT}
+      - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
       - ./server:/app
     depends_on:

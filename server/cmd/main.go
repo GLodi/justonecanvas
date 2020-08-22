@@ -21,6 +21,12 @@ func main() {
 }
 func run() error {
 	g := gin.Default()
+	// g.Use(cors.New(cors.Config{
+	// 	AllowAllOrigins:  true,
+	// 	AllowMethods:     []string{"GET", "POST", "PUT", "HEAD"},
+	// 	AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+	// 	AllowCredentials: true,
+	// 	MaxAge:           12 * time.Hour}))
 	// pprof.Register(g)
 
 	d := di.BuildContainer()

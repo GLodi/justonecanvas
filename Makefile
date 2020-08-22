@@ -19,3 +19,19 @@ prune:
 clean:
 	docker-compose down
 	docker volume prune
+
+upprod:
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up 
+
+reupprod:
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up --build
+
+reupprodserver:
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up --no-deps --build server
+
+reupprodclient:
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up --no-deps --build client
+
+cleanprod:
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod down 
+	docker volume prune

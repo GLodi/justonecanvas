@@ -3,7 +3,7 @@ package constants
 const (
 	ColorAmount = 16
 
-	SquarePerRow = 50
+	SquarePerRow = 75
 
-	Squares = 2500
+	Squares = 75 * 75
 )

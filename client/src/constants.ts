@@ -1,5 +1,5 @@
 export class Constants {
-  public static readonly SQUARE_PER_ROW: number = 50
+  public static readonly SQUARE_PER_ROW: number = 75
 
   public static readonly SQUARE_AMOUNT: number = Math.pow(
     Constants.SQUARE_PER_ROW,
@@ -10,10 +10,10 @@ export class Constants {
   public static readonly SQUARE_SIZE: number = 1
 
   // Number of react-konva layers
-  public static readonly LAYERS_AMOUNT: number = 3
+  public static readonly LAYERS_AMOUNT: number = 4
 
   // React-konva grid starting scale
-  public static readonly START_SCALE: number = 18
+  public static readonly START_SCALE: number = 11
 
   // Mouse-wheel scroll speed
   public static readonly SCALE_BY: number = 1.05

@@ -16,7 +16,7 @@ import (
 type Repository interface {
 	Get() (*Canvas, error)
 	Update(pos int, color uint8) error
-	Store(*Canvas)
+	Store(*Canvas) error
 }
 
 type repo struct {
@@ -84,7 +84,7 @@ func (r *repo) Update(pos int, color uint8) (err error) {
 	return err
 }
 
-func (r *repo) Store(canvas *Canvas) {
+func (r *repo) Store(canvas *Canvas) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -94,5 +94,7 @@ func (r *repo) Store(canvas *Canvas) {
 
 	filter := bson.M{"_id": "1"}
 
-	collection.ReplaceOne(ctx, filter, &canvas)
+	_, err := collection.ReplaceOne(ctx, filter, &canvas)
+
+	return err
 }

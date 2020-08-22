@@ -33,8 +33,12 @@ func (u *usecase) Update(pos int, color uint8) error {
 func (u *usecase) LiveUpdate() {
 	canv, err := u.repo.Get()
 	if err != nil {
-		u.log.Errorln("canvas_handler UpdateMongo:", err)
+		u.log.Errorln("canvas_handler LiveMongo:", err)
 		return
 	}
-	u.repo.Store(canv)
+	err = u.repo.Store(canv)
+	if err != nil {
+		u.log.Errorln("canvas_handler LiveMongo:", err)
+		return
+	}
 }
