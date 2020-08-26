@@ -1,13 +1,14 @@
 config:
-  target: "ws://localhost:8080/api/v1/canvas/ws"
+  target: "ws://justonecanvas.live/api/v1/canvas/ws"
+  #target: "ws://localhost:8080/api/v1/canvas/ws"
   processor: "./my-function.js"
   phases:
     - duration: 400  # Test for x seconds
-      arrivalRate: 200 # Every second, add y users
+      arrivalRate: 20 # Every second, add y users
       name: "Ramping up the load"
 scenarios:
   - engine: ws
     flow:
       - function: "createTimestampedObject"
       - send: "{{ color }}{{ y }}{{ x }}"
-      - think: 10 # do nothing for 10m and disconnect
+      - think: 50 # do nothing for 10m and disconnect

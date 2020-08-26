@@ -25,7 +25,7 @@ services:
     environment: 
       - TERM=xterm-256color`
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
+      - ${SERVER_PORT}
     volumes:
       - ./server:/app
     depends_on:

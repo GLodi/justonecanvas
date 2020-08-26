@@ -68,7 +68,7 @@ class Square extends React.Component<IProps, IState> {
         width={this.state.size}
         height={this.state.size}
         fill={map[this.state.color]}
-        strokeWidth={0.001}
+        strokeWidth={0.0075}
         stroke="black"
       />
     )

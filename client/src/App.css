@@ -1,10 +1,9 @@
 .App {
   text-align: center;
-  background-color: lightcyan;
+  background-color: transparent;
 }
 
 .App-logo {
-  height: 40vmin;
   pointer-events: none;
 }
 
@@ -39,6 +38,38 @@
 }
 
 body {
-  background-color: lightcyan;
+  font-family: Quicksand;
+  background: linear-gradient(0, #281130 50%, #030133);
   height: 100vh;
+}
+
+a {
+  margin-top: 20px;
+  font-size: 150%;
+  z-index: 2;
+  position: absolute;
+  outline: none;
+}
+
+a:link {
+  color: #b32400;
+}
+
+a:visited {
+  color: #ff471a;
+}
+
+a:focus {
+  border-bottom: 1px solid;
+  background: #ff704d;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+  background: #ffad99;
+}
+
+a:active {
+  background: #b32400;
+  color: #ffad99;
 }

@@ -23,14 +23,14 @@ clean:
 upprod:
 	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up 
 
+upprodd:
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up -d
+
+downprod:
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod down
+
 reupprod:
-	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up --build
-
-reupprodserver:
-	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up --no-deps --build server
-
-reupprodclient:
-	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up --no-deps --build client
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file=.env.prod up --build
 
 cleanprod:
 	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod down 

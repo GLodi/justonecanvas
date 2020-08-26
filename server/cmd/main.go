@@ -31,7 +31,7 @@ func run() error {
 
 	d := di.BuildContainer()
 
-	// HACK: uncomment this for artillery
+	// HACK: rest rate limiter. comment for artillery
 	d.Invoke(func(redClient *redis.Client) {
 		g.Use(rest.NewRateLimiterMiddleware(redClient, "general", 100, 60*time.Second))
 	})

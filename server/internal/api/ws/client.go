@@ -81,7 +81,7 @@ func (c *Client) readPump() {
 		// diff := time.Now().Sub(c.hub.ips[ip])
 		c.hub.lock.RUnlock()
 
-		// HACK: uncomment this for artillery
+		// HACK: per-ip-address ws rate limiter. comment for artillery
 		// if int(diff.Minutes()) >= 1 {
 
 		if message[0] >= 0 && message[0] < constants.SquarePerRow &&

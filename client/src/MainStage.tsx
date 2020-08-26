@@ -20,7 +20,8 @@ interface IState {
 }
 
 class MainStage extends React.Component<IProps, IState> {
-  url = ''
+  resturl = ''
+  wsurl = ''
   timeout = 250
   references = Array(Constants.SQUARE_AMOUNT)
     .fill(0)
@@ -77,7 +78,7 @@ class MainStage extends React.Component<IProps, IState> {
   }
 
   private connect() {
-    fetch('/api/v1/canvas')
+    fetch(this.resturl)
       .then(res => res.json())
       .then(data => {
         const grid2: number[][] = new Array(Constants.SQUARE_PER_ROW)
@@ -92,7 +93,7 @@ class MainStage extends React.Component<IProps, IState> {
         this.setState({ grid: grid2 })
       })
 
-    const ws = new WebSocket('ws://localhost:8080/api/v1/canvas/ws')
+    const ws = new WebSocket(this.wsurl)
     ws.binaryType = 'arraybuffer'
     const that = this // cache the this
     let connectInterval: NodeJS.Timeout
@@ -156,6 +157,14 @@ class MainStage extends React.Component<IProps, IState> {
   }
 
   public componentDidMount() {
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      console.log('DEV ENV')
+      this.resturl = '/api/v1/canvas'
+      this.wsurl = 'ws://localhost:8080/api/v1/canvas/ws'
+    } else {
+      this.resturl = 'http://justonecanvas.live/api/v1/canvas'
+      this.wsurl = 'ws://justonecanvas.live/api/v1/canvas/ws'
+    }
     this.connect()
   }
 
@@ -211,44 +220,50 @@ class MainStage extends React.Component<IProps, IState> {
     layers.push(<Layer key={Constants.LAYERS_AMOUNT}>{colors}</Layer>)
 
     return (
-      <Stage
-        onWheel={e => {
-          e.evt.preventDefault()
-          const stage = e.target.getStage()
-          if (stage != null) {
-            const oldScale = stage?.scaleX()
-            const mousePointTo = {
-              x:
-                stage.getPointerPosition()!.x / oldScale - stage.x() / oldScale,
-              y: stage.getPointerPosition()!.y / oldScale - stage.y() / oldScale
+      <div>
+        <Stage
+          onWheel={e => {
+            e.evt.preventDefault()
+            const stage = e.target.getStage()
+            if (stage != null) {
+              const oldScale = stage?.scaleX()
+              const mousePointTo = {
+                x:
+                  stage.getPointerPosition()!.x / oldScale -
+                  stage.x() / oldScale,
+                y:
+                  stage.getPointerPosition()!.y / oldScale -
+                  stage.y() / oldScale
+              }
+
+              const newScale =
+                e.evt.deltaY > 0
+                  ? oldScale * Constants.SCALE_BY
+                  : oldScale / Constants.SCALE_BY
+
+              this.setState({
+                grid: this.state.grid,
+                stageScale: newScale,
+                stageX:
+                  -(mousePointTo.x - stage.getPointerPosition()!.x / newScale) *
+                  newScale,
+                stageY:
+                  -(mousePointTo.y - stage.getPointerPosition()!.y / newScale) *
+                  newScale
+              })
             }
-
-            const newScale =
-              e.evt.deltaY > 0
-                ? oldScale * Constants.SCALE_BY
-                : oldScale / Constants.SCALE_BY
-
-            this.setState({
-              grid: this.state.grid,
-              stageScale: newScale,
-              stageX:
-                -(mousePointTo.x - stage.getPointerPosition()!.x / newScale) *
-                newScale,
-              stageY:
-                -(mousePointTo.y - stage.getPointerPosition()!.y / newScale) *
-                newScale
-            })
-          }
-        }}
-        scaleX={this.state.stageScale}
-        scaleY={this.state.stageScale}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        x={this.state.stageX}
-        y={this.state.stageY}
-      >
-        {layers}
-      </Stage>
+          }}
+          scaleX={this.state.stageScale}
+          scaleY={this.state.stageScale}
+          width={window.innerWidth}
+          height={window.innerHeight}
+          draggable={true}
+          x={this.state.stageX}
+          y={this.state.stageY}
+        >
+          {layers}
+        </Stage>
+      </div>
     )
   }
 }
