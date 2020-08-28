@@ -6,7 +6,7 @@ function Main() {
   return (
     <div className="App">
       <a
-        onClick={() => window.open('http://justonecanvas.dev/about', '_blank')}
+        onClick={() => window.open('http://justonecanvas.live/about', '_blank')}
         href="/#"
       >
         what is this?
