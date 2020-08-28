@@ -8,7 +8,9 @@ on the [frontend](https://dev.to/finallynero/using-websockets-in-react-4fkp)
 
 ## development
 
-A complete dev environment is available under docker-compose. Check Makefile or just `docker-compose up` under root.
+A complete dev environment is available under docker-compose. Make sure to have docker 19.03 and docker-compose 1.26.2
+
+Check Makefile or just `docker-compose up` under root.
 Both client and server are setup for hot-reloading.
 
 If you don't want to use docker, then:

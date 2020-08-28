@@ -1,0 +1,25 @@
+.About {
+  text-align: center;
+  background-color: transparent;
+}
+
+p {
+  font-size: 100%;
+}
+
+.nobull {
+  list-style-type: none;
+}
+
+.center {
+  color: #fff;
+  height: 200px;
+  text-align: center;
+}
+
+/* If the text has multiple lines, add the following: */
+.center p {
+  line-height: 1.5;
+  display: inline-block;
+  vertical-align: middle;
+}

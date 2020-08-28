@@ -1,18 +1,20 @@
 import React from 'react'
-import './App.css'
-import MainStage from './MainStage'
+import { Route, Switch } from 'react-router'
+
+import Main from './Main'
+import About from './About'
+import { BrowserRouter } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App">
-      <a
-        onClick={() => window.open('https://giuliolodi.dev/', '_blank')}
-        href="#"
-      >
-        what is this?
-      </a>
-      <MainStage />
-    </div>
+    <BrowserRouter>
+      <div>
+        <Switch>
+          <Route path="/" exact component={Main} />
+          <Route exact path="/about" component={About} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   )
 }
 
