@@ -19,10 +19,10 @@ function About() {
         </li>
         <li>
           All users connected to justonecanvas actually share the same canvas,
-          and the Golang backend
+          and the backend
         </li>
         <li>
-          communicates with all of them thanks to WebSockets.
+          updates all players of each other's moves thanks to WebSockets.
           <br />
           &nbsp;
         </li>

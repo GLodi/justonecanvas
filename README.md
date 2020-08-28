@@ -46,8 +46,12 @@ You can do load testing thanks to Artillery:
 
 ## production
 
-Create a .env.prod under root with your variables and
-`docker-compose -f docker-compose.prod.yml up` under root folder.
+Check makefile or `docker-compose -f docker-compose.prod.yml up` under root folder.
+
+The production environment makes two assumptions:
+ - There must be a .env.prod under root with your variables
+ - It must find let's encrypt's certs under `/etc/letsencrypt/live/justonecanvas.live`
+
 
 ## profiling
 

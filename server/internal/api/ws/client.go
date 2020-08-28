@@ -78,24 +78,24 @@ func (c *Client) readPump() {
 		ip := ra[:strings.IndexByte(ra, ':')]
 
 		c.hub.lock.RLock()
-		// diff := time.Now().Sub(c.hub.ips[ip])
+		diff := time.Now().Sub(c.hub.ips[ip])
 		c.hub.lock.RUnlock()
 
 		// HACK: per-ip-address ws rate limiter. comment for artillery
-		// if int(diff.Minutes()) >= 1 {
+		if int(diff.Seconds()) >= 1 {
 
-		if message[0] >= 0 && message[0] < constants.SquarePerRow &&
-			message[1] >= 0 && message[1] < constants.SquarePerRow &&
-			message[2] >= 0 && message[2] < constants.SquarePerRow {
+			if message[0] >= 0 && message[0] < constants.SquarePerRow &&
+				message[1] >= 0 && message[1] < constants.SquarePerRow &&
+				message[2] >= 0 && message[2] < constants.SquarePerRow {
 
-			c.hub.lock.Lock()
-			c.hub.ips[ip] = time.Now()
-			c.hub.lock.Unlock()
+				c.hub.lock.Lock()
+				c.hub.ips[ip] = time.Now()
+				c.hub.lock.Unlock()
 
-			c.hub.broadcast <- message
+				c.hub.broadcast <- message
+			}
+
 		}
-
-		// }
 
 	}
 }

@@ -162,8 +162,8 @@ class MainStage extends React.Component<IProps, IState> {
       this.resturl = '/api/v1/canvas'
       this.wsurl = 'ws://localhost:8080/api/v1/canvas/ws'
     } else {
-      this.resturl = 'http://justonecanvas.live/api/v1/canvas'
-      this.wsurl = 'ws://justonecanvas.live/api/v1/canvas/ws'
+      this.resturl = 'https://justonecanvas.live/api/v1/canvas'
+      this.wsurl = 'wss://justonecanvas.live/api/v1/canvas/ws'
     }
     this.connect()
   }
