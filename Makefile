@@ -30,7 +30,7 @@ downprod:
 	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod down
 
 reupprod:
-	docker-compose -f docker-compose.prod.yml -p jocprod --env-file=.env.prod up --build
+	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod up --build
 
 cleanprod:
 	docker-compose -f docker-compose.prod.yml -p jocprod --env-file .env.prod down 
