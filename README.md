@@ -1,5 +1,11 @@
 # justonecanvas
 
+
+<div align="center">
+	<img src="https://raw.githubusercontent.com/GLodi/justonecanvas/master/picture.png" width="256">
+</div>
+
+
 This project follows a combination of [this](https://github.com/L04DB4L4NC3R/clean-architecture-sample) and [this](https://github.com/AkbaraliShaikh/denti) implementations
 of Clean Architecture
 
