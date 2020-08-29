@@ -1,9 +1,7 @@
 # justonecanvas
 
 
-<div align="center">
-	<img src="https://raw.githubusercontent.com/GLodi/justonecanvas/master/picture.png" width="256">
-</div>
+![image](https://github.com/GLodi/justonecanvas/blob/master/picture.png)
 
 
 This project follows a combination of [this](https://github.com/L04DB4L4NC3R/clean-architecture-sample) and [this](https://github.com/AkbaraliShaikh/denti) implementations
