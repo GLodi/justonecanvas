@@ -23,3 +23,34 @@ p {
   display: inline-block;
   vertical-align: middle;
 }
+
+.about a {
+  font-size: 100%;
+  z-index: 2;
+  position: absolute;
+  outline: none;
+  text-align: center;
+}
+
+.about a:link {
+  color: #fff;
+}
+
+.about a:visited {
+  color: #fff;
+}
+
+.about a:focus {
+  border-bottom: 1px solid;
+  background: #ff704d;
+}
+
+.about a:hover {
+  border-bottom: 1px solid;
+  background: #ffad99;
+}
+
+.about a:active {
+  background: #b32400;
+  color: #ffad99;
+}
