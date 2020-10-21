@@ -5,7 +5,7 @@ in your browser BEFORE you make a move, or it may lag a lot.
 
 [Link](https://justonecanvas.live)
 
-[Blog post](https://giuliolodi.dev/how-i-made-justonecanvas)
+[Blog post](https://giuliolodi.dev/2020/08/29/how-i-made-justonecanvas)
 
 ![image](https://github.com/GLodi/justonecanvas/blob/master/picture.png)
 
