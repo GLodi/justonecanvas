@@ -35,7 +35,7 @@ function About() {
           </li>
 
           <li>
-            <a href="https://giuliolodi.dev/how-i-made-justonecanvas">Blog</a>
+            <a href="https://giuliolodi.dev/2020/08/29/how-i-made-justonecanvas">Blog Post</a>
           </li>
         </ul>
       </div>
