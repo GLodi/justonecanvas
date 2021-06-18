@@ -3,7 +3,7 @@
 If you use Firefox, or any canvas-blocking mechanism, you need to accept canvas permissions 
 in your browser BEFORE you make a move, or it may lag a lot.
 
-[Link](https://justonecanvas.live)
+Website no longer online!
 
 [Blog post](https://giuliolodi.dev/how-i-made-justonecanvas)
 
